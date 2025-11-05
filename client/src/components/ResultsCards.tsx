@@ -1,6 +1,6 @@
 import type { VendorResult } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, FileText, User, Calendar, MapPin } from "lucide-react";
+import { Building2, FileText, User, Calendar, MapPin, Package, Globe, UserCircle, Mail } from "lucide-react";
 
 interface ResultsCardsProps {
   results: VendorResult[];
@@ -31,9 +31,21 @@ export function ResultsCards({ results }: ResultsCardsProps) {
           <CardHeader>
             <CardTitle className="flex items-start gap-2 text-base">
               <Building2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-              <span className="line-clamp-2" data-testid={`text-company-${index}`}>
-                {result.company}
-              </span>
+              {result.website ? (
+                <a
+                  href={result.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="line-clamp-2 text-primary hover:underline"
+                  data-testid={`link-company-${index}`}
+                >
+                  {result.company}
+                </a>
+              ) : (
+                <span className="line-clamp-2" data-testid={`text-company-${index}`}>
+                  {result.company}
+                </span>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
@@ -51,6 +63,15 @@ export function ResultsCards({ results }: ResultsCardsProps) {
                 {result.actor}
               </span>
             </div>
+            {result.product && (
+              <div className="flex items-center gap-2 text-sm">
+                <Package className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">Product:</span>
+                <span className="font-medium" data-testid={`text-product-${index}`}>
+                  {result.product}
+                </span>
+              </div>
+            )}
             <div className="flex items-center gap-2 text-sm">
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <span className="text-muted-foreground">Year:</span>
@@ -65,6 +86,39 @@ export function ResultsCards({ results }: ResultsCardsProps) {
                 {result.event}
               </span>
             </div>
+            {result.website && (
+              <div className="flex items-center gap-2 text-sm">
+                <Globe className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">Website:</span>
+                <a
+                  href={result.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline truncate"
+                  data-testid={`link-website-${index}`}
+                >
+                  Link
+                </a>
+              </div>
+            )}
+            {result.primaryContact && (
+              <div className="flex items-center gap-2 text-sm">
+                <UserCircle className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">Contact:</span>
+                <span className="font-medium truncate" data-testid={`text-primaryContact-${index}`}>
+                  {result.primaryContact}
+                </span>
+              </div>
+            )}
+            {result.contactInfo && (
+              <div className="flex items-center gap-2 text-sm">
+                <Mail className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">Info:</span>
+                <span className="font-medium truncate" data-testid={`text-contactInfo-${index}`}>
+                  {result.contactInfo}
+                </span>
+              </div>
+            )}
           </CardContent>
         </Card>
       ))}

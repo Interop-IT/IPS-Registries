@@ -15,6 +15,7 @@ export default function Home() {
     actors: [],
     years: [],
     events: [],
+    searchQuery: '',
   });
 
   // Fetch vendor results from API
@@ -35,7 +36,9 @@ export default function Home() {
     }
 
     const getUniqueValues = (key: keyof VendorResult): string[] => {
-      const values = vendorResults.map(r => r[key]).filter(Boolean);
+      const values = vendorResults
+        .map(r => r[key])
+        .filter((value): value is string => Boolean(value));
       return Array.from(new Set(values)).sort();
     };
 
@@ -48,11 +51,12 @@ export default function Home() {
     };
   }, [vendorResults]);
 
-  // Filter results based on selected filters
+  // Filter results based on selected filters and search query
   const filteredResults = useMemo(() => {
     if (!vendorResults) return [];
 
     return vendorResults.filter(result => {
+      // Apply multi-select filters
       if (filters.companies.length > 0 && !filters.companies.includes(result.company)) {
         return false;
       }
@@ -68,6 +72,31 @@ export default function Home() {
       if (filters.events.length > 0 && !filters.events.includes(result.event)) {
         return false;
       }
+
+      // Apply text search across all fields
+      if (filters.searchQuery) {
+        const searchLower = filters.searchQuery.toLowerCase();
+        const searchableFields = [
+          result.company,
+          result.profile,
+          result.actor,
+          result.year,
+          result.event,
+          result.website || '',
+          result.product || '',
+          result.primaryContact || '',
+          result.contactInfo || '',
+        ];
+        
+        const matchesSearch = searchableFields.some(field => 
+          field.toLowerCase().includes(searchLower)
+        );
+        
+        if (!matchesSearch) {
+          return false;
+        }
+      }
+
       return true;
     });
   }, [filters, vendorResults]);

@@ -1,7 +1,8 @@
 import { MultiSelectFilter } from "./MultiSelectFilter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { X, RotateCcw } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { X, RotateCcw, Search } from "lucide-react";
 
 export interface FilterState {
   companies: string[];
@@ -9,6 +10,7 @@ export interface FilterState {
   actors: string[];
   years: string[];
   events: string[];
+  searchQuery: string;
 }
 
 interface FilterSectionProps {
@@ -35,20 +37,34 @@ export function FilterSection({ filters, onChange, availableOptions }: FilterSec
       actors: [],
       years: [],
       events: [],
+      searchQuery: '',
     });
+  };
+
+  const updateSearchQuery = (value: string) => {
+    onChange({ ...filters, searchQuery: value });
   };
 
   const removeFilter = (key: keyof FilterState, value: string) => {
-    onChange({
-      ...filters,
-      [key]: filters[key].filter(item => item !== value),
-    });
+    if (key === 'searchQuery') {
+      onChange({ ...filters, searchQuery: '' });
+    } else {
+      const currentValue = filters[key];
+      if (Array.isArray(currentValue)) {
+        onChange({
+          ...filters,
+          [key]: currentValue.filter((item: string) => item !== value),
+        });
+      }
+    }
   };
 
-  const totalActiveFilters = Object.values(filters).reduce(
-    (sum, arr) => sum + arr.length,
-    0
-  );
+  const totalActiveFilters = Object.values(filters).reduce((sum, value) => {
+    if (Array.isArray(value)) {
+      return sum + value.length;
+    }
+    return sum;
+  }, 0) + (filters.searchQuery ? 1 : 0);
 
   const allFilters = [
     { key: 'companies' as const, label: 'Company', items: filters.companies },
@@ -75,6 +91,20 @@ export function FilterSection({ filters, onChange, availableOptions }: FilterSec
                 Reset All
               </Button>
             )}
+          </div>
+
+          <div className="mb-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search by company, product, contact, or any field..."
+                value={filters.searchQuery}
+                onChange={(e) => updateSearchQuery(e.target.value)}
+                className="pl-9"
+                data-testid="input-search-all"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">

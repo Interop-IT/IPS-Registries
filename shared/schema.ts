@@ -24,6 +24,10 @@ export interface VendorResult {
   actor: string;
   year: string;
   event: string;
+  website?: string;
+  product?: string;
+  primaryContact?: string;
+  contactInfo?: string;
 }
 
 export const vendorResultSchema = z.object({
@@ -32,6 +36,10 @@ export const vendorResultSchema = z.object({
   actor: z.string(),
   year: z.string(),
   event: z.string(),
+  website: z.string().optional(),
+  product: z.string().optional(),
+  primaryContact: z.string().optional(),
+  contactInfo: z.string().optional(),
 });
 
 export type InsertVendorResult = z.infer<typeof vendorResultSchema>;

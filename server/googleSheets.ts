@@ -120,6 +120,10 @@ function parseCSV(csvText: string): VendorResult[] {
       actor: getValue(values, columnMap, ['actor']) || '',
       year: getValue(values, columnMap, ['year']) || '',
       event: getValue(values, columnMap, ['event', 'connectathon', 'location']) || '',
+      website: getValue(values, columnMap, ['link to company website', 'website', 'company website', 'url', 'link']),
+      product: getValue(values, columnMap, ['product', 'product name']),
+      primaryContact: getValue(values, columnMap, ['primary contact', 'contact', 'primary_contact', 'primarycontact']),
+      contactInfo: getValue(values, columnMap, ['contact info', 'contact_info', 'contactinfo', 'email', 'phone']),
     };
     
     // Only add if we have at least company
