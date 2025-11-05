@@ -81,6 +81,9 @@ export default {
           busy: "rgb(239 68 68)",
           offline: "rgb(156 163 175)",
         },
+        "ips-red": "hsl(var(--ips-red) / <alpha-value>)",
+        "ips-blue": "hsl(var(--ips-blue) / <alpha-value>)",
+        "ips-navy": "hsl(var(--ips-navy) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["var(--font-sans)"],
