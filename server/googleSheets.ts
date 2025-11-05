@@ -32,19 +32,53 @@ export async function fetchVendorResults(): Promise<VendorResult[]> {
 
   try {
     const sheetId = extractSheetId(sheetsUrl);
-    // Use the CSV export URL for public sheets
-    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
     
-    const response = await fetch(csvUrl);
+    // Try different methods to access the sheet
+    const urls = [
+      `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=0`,
+      `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`,
+      `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`,
+    ];
     
-    if (!response.ok) {
-      throw new Error(`Failed to fetch sheet data: ${response.statusText}`);
+    let lastError: Error | null = null;
+    
+    for (const csvUrl of urls) {
+      try {
+        const response = await fetch(csvUrl, {
+          redirect: 'follow',
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (compatible; IPSRegistry/1.0)'
+          }
+        });
+        
+        const csvText = await response.text();
+        
+        // Check if we got an HTML error page instead of CSV
+        if (csvText.includes('<!DOCTYPE html>') || csvText.includes('<HTML>')) {
+          lastError = new Error('Sheet is not publicly accessible or does not exist');
+          continue;
+        }
+        
+        if (!response.ok) {
+          lastError = new Error(`HTTP ${response.status}: ${response.statusText}`);
+          continue;
+        }
+        
+        const results = parseCSV(csvText);
+        
+        if (results.length > 0) {
+          console.log(`Successfully fetched ${results.length} results from Google Sheets`);
+          return results;
+        }
+        
+        lastError = new Error('Sheet appears to be empty');
+      } catch (err) {
+        lastError = err instanceof Error ? err : new Error(String(err));
+        continue;
+      }
     }
     
-    const csvText = await response.text();
-    const results = parseCSV(csvText);
-    
-    return results;
+    throw lastError || new Error('Failed to fetch sheet data from all attempted URLs');
   } catch (error) {
     console.error("Error fetching Google Sheets data:", error);
     throw error;
