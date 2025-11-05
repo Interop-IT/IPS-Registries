@@ -4,7 +4,7 @@
 
 The IPS Results Registry is a web application for searching and exploring vendors that have tested International Patient Summary (IPS) at various healthcare interoperability events worldwide. This is a data-intensive utility application focused on providing a clean, professional search and filter experience for healthcare testing results.
 
-The application displays vendor testing results in both table and card views, with multi-select filtering capabilities across five dimensions: Company, IHE Profile, Actor, Year, and Event.
+The application displays vendor testing results in both table and card views, with multi-select filtering capabilities across five dimensions: Company, IHE Profile, Actor, Year, and Event. Additionally, a global text search allows users to search across all fields including company information, products, and contact details.
 
 ## User Preferences
 
@@ -37,9 +37,11 @@ Preferred communication style: Simple, everyday language.
 
 **Key Design Decisions**:
 - Search-first experience: filtering is the primary user interaction
+- Global text search across all fields (company, product, contact, etc.) combined with multi-select filters
 - No large hero images - compact utility-focused interface
 - Dual view modes (table/cards) for different user preferences
 - Multi-select filters with search-within-dropdown capability
+- Clickable company names in card view that link to company websites (when available)
 - Responsive design from mobile to desktop
 
 ### Backend Architecture
@@ -80,6 +82,10 @@ interface VendorResult {
   actor: string;
   year: string;
   event: string;
+  website?: string;           // Link to company website (optional)
+  product?: string;           // Product name (optional)
+  primaryContact?: string;    // Primary contact name (optional)
+  contactInfo?: string;       // Contact information (optional)
 }
 ```
 
