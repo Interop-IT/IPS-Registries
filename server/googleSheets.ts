@@ -116,14 +116,14 @@ function parseCSV(csvText: string): VendorResult[] {
     // Map to VendorResult
     const result: VendorResult = {
       company: getValue(values, columnMap, ['company', 'vendor', 'organization']) || '',
-      profile: getValue(values, columnMap, ['profile', 'ihe profile', 'iheprofile']) || '',
+      profile: getValue(values, columnMap, ['ips profile', 'profile', 'ihe profile', 'iheprofile']) || '',
       actor: getValue(values, columnMap, ['actor']) || '',
       year: getValue(values, columnMap, ['year']) || '',
       event: getValue(values, columnMap, ['event', 'connectathon', 'location']) || '',
     };
     
-    // Only add if we have at least company and profile
-    if (result.company && result.profile) {
+    // Only add if we have at least company
+    if (result.company) {
       results.push(result);
     }
   }

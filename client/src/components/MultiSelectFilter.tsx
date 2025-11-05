@@ -82,26 +82,34 @@ export function MultiSelectFilter({
                   No results found
                 </p>
               ) : (
-                <div className="space-y-1">
-                  {filteredOptions.map((option) => (
-                    <div
-                      key={option}
-                      className={cn(
-                        "flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover-elevate active-elevate-2",
-                        selected.includes(option) && "bg-accent"
-                      )}
-                      onClick={() => toggleOption(option)}
-                      data-testid={`option-${option}`}
-                    >
-                      <div className={cn(
-                        "flex h-4 w-4 items-center justify-center rounded-sm border",
-                        selected.includes(option) && "border-primary bg-primary text-primary-foreground"
-                      )}>
-                        {selected.includes(option) && <Check className="h-3 w-3" />}
-                      </div>
-                      <span className="flex-1 truncate">{option}</span>
-                    </div>
-                  ))}
+                <div className="space-y-1" role="listbox">
+                  {filteredOptions.map((option) => {
+                    const isSelected = selected.includes(option);
+                    return (
+                      <button
+                        key={option}
+                        type="button"
+                        role="option"
+                        aria-selected={isSelected}
+                        className={cn(
+                          "flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm text-left hover-elevate active-elevate-2",
+                          isSelected && "bg-accent"
+                        )}
+                        onClick={() => {
+                          toggleOption(option);
+                        }}
+                        data-testid={`option-${option}`}
+                      >
+                        <div className={cn(
+                          "flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border",
+                          isSelected && "border-primary bg-primary text-primary-foreground"
+                        )}>
+                          {isSelected && <Check className="h-3 w-3" />}
+                        </div>
+                        <span className="flex-1 truncate">{option}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
