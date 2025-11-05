@@ -97,7 +97,7 @@ export function ResultsCards({ results }: ResultsCardsProps) {
                   className="text-primary hover:underline truncate"
                   data-testid={`link-website-${index}`}
                 >
-                  Link
+                  {result.website.substring(0, 25)}
                 </a>
               </div>
             )}

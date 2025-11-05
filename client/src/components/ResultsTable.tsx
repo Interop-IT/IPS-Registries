@@ -129,17 +129,6 @@ export function ResultsTable({ results }: ResultsTableProps) {
             <TableHead>
               <Button
                 variant="ghost"
-                onClick={() => handleSort("website")}
-                className="h-auto p-0 font-semibold hover:bg-transparent"
-                data-testid="button-sort-website"
-              >
-                Website
-                <SortIcon column="website" />
-              </Button>
-            </TableHead>
-            <TableHead>
-              <Button
-                variant="ghost"
                 onClick={() => handleSort("primaryContact")}
                 className="h-auto p-0 font-semibold hover:bg-transparent"
                 data-testid="button-sort-primaryContact"
@@ -164,7 +153,7 @@ export function ResultsTable({ results }: ResultsTableProps) {
         <TableBody>
           {sortedResults.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={9} className="h-32 text-center">
+              <TableCell colSpan={8} className="h-32 text-center">
                 <p className="text-muted-foreground">No results found</p>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Try adjusting your filters
@@ -178,7 +167,19 @@ export function ResultsTable({ results }: ResultsTableProps) {
                 data-testid={`row-result-${index}`}
               >
                 <TableCell className="font-medium" data-testid={`text-company-${index}`}>
-                  {result.company}
+                  {result.website ? (
+                    <a
+                      href={result.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                      data-testid={`link-company-${index}`}
+                    >
+                      {result.company}
+                    </a>
+                  ) : (
+                    result.company
+                  )}
                 </TableCell>
                 <TableCell data-testid={`text-profile-${index}`}>{result.profile}</TableCell>
                 <TableCell data-testid={`text-actor-${index}`}>{result.actor}</TableCell>
@@ -186,22 +187,6 @@ export function ResultsTable({ results }: ResultsTableProps) {
                 <TableCell data-testid={`text-event-${index}`}>{result.event}</TableCell>
                 <TableCell data-testid={`text-product-${index}`}>
                   {result.product || '-'}
-                </TableCell>
-                <TableCell data-testid={`text-website-${index}`}>
-                  {result.website ? (
-                    <a
-                      href={result.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-primary hover:underline"
-                      data-testid={`link-website-${index}`}
-                    >
-                      Link
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  ) : (
-                    '-'
-                  )}
                 </TableCell>
                 <TableCell data-testid={`text-primaryContact-${index}`}>
                   {result.primaryContact || '-'}
