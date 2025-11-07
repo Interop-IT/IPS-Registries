@@ -23,7 +23,8 @@ export default function Home() {
     queryKey: ['/api/vendor-results'],
   });
 
-  // Get available options from all data
+  // Get available options with cascading logic - each filter shows only options
+  // that exist in the dataset after applying all OTHER filters
   const availableOptions = useMemo(() => {
     if (!vendorResults) {
       return {
@@ -35,21 +36,69 @@ export default function Home() {
       };
     }
 
-    const getUniqueValues = (key: keyof VendorResult): string[] => {
-      const values = vendorResults
+    // Helper function to filter results excluding a specific filter type
+    const getFilteredResults = (excludeFilter: 'companies' | 'profiles' | 'actors' | 'years' | 'events') => {
+      return vendorResults.filter(result => {
+        // Apply all filters except the excluded one
+        if (excludeFilter !== 'companies' && filters.companies.length > 0 && !filters.companies.includes(result.company)) {
+          return false;
+        }
+        if (excludeFilter !== 'profiles' && filters.profiles.length > 0 && !filters.profiles.includes(result.profile)) {
+          return false;
+        }
+        if (excludeFilter !== 'actors' && filters.actors.length > 0 && !filters.actors.includes(result.actor)) {
+          return false;
+        }
+        if (excludeFilter !== 'years' && filters.years.length > 0 && !filters.years.includes(result.year)) {
+          return false;
+        }
+        if (excludeFilter !== 'events' && filters.events.length > 0 && !filters.events.includes(result.event)) {
+          return false;
+        }
+
+        // Apply text search
+        if (filters.searchQuery) {
+          const searchLower = filters.searchQuery.toLowerCase();
+          const searchableFields = [
+            result.company,
+            result.profile,
+            result.actor,
+            result.year,
+            result.event,
+            result.website || '',
+            result.product || '',
+            result.primaryContact || '',
+            result.contactInfo || '',
+          ];
+          
+          const matchesSearch = searchableFields.some(field => 
+            field.toLowerCase().includes(searchLower)
+          );
+          
+          if (!matchesSearch) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+    };
+
+    const getUniqueValues = (results: VendorResult[], key: keyof VendorResult): string[] => {
+      const values = results
         .map(r => r[key])
         .filter((value): value is string => Boolean(value));
       return Array.from(new Set(values)).sort();
     };
 
     return {
-      companies: getUniqueValues('company'),
-      profiles: getUniqueValues('profile'),
-      actors: getUniqueValues('actor'),
-      years: getUniqueValues('year'),
-      events: getUniqueValues('event'),
+      companies: getUniqueValues(getFilteredResults('companies'), 'company'),
+      profiles: getUniqueValues(getFilteredResults('profiles'), 'profile'),
+      actors: getUniqueValues(getFilteredResults('actors'), 'actor'),
+      years: getUniqueValues(getFilteredResults('years'), 'year'),
+      events: getUniqueValues(getFilteredResults('events'), 'event'),
     };
-  }, [vendorResults]);
+  }, [vendorResults, filters]);
 
   // Filter results based on selected filters and search query
   const filteredResults = useMemo(() => {

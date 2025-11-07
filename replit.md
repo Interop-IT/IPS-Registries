@@ -38,9 +38,11 @@ Preferred communication style: Simple, everyday language.
 **Key Design Decisions**:
 - Search-first experience: filtering is the primary user interaction
 - Global text search across all fields (company, product, contact, etc.) combined with multi-select filters
+- Cascading filters: each filter dynamically shows only options available based on other active filter selections
 - No large hero images - compact utility-focused interface
 - Dual view modes (table/cards) for different user preferences
 - Multi-select filters with search-within-dropdown capability
+- Card view includes optional "Group by Company" toggle for organizing results by vendor
 - Clickable company names in card view that link to company websites (when available)
 - Responsive design from mobile to desktop
 
