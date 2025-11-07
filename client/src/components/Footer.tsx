@@ -2,10 +2,10 @@ import { ExternalLink } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="border-t bg-card py-8">
-      <div className="container px-6">
+    <footer className="border-t bg-card py-6 md:py-8">
+      <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             <div>
               <h4 className="mb-3 font-semibold">About IPS</h4>
               <p className="text-sm text-muted-foreground">

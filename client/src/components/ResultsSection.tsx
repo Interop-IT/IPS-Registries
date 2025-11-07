@@ -14,12 +14,12 @@ export function ResultsSection({ results }: ResultsSectionProps) {
   const [groupByCompany, setGroupByCompany] = useState(false);
 
   return (
-    <section className="py-8">
-      <div className="container px-6">
+    <section className="py-6 md:py-8">
+      <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between md:mb-6">
             <div>
-              <h3 className="text-xl font-semibold">
+              <h3 className="text-lg font-semibold md:text-xl">
                 Results
               </h3>
               <p className="text-sm text-muted-foreground" data-testid="text-results-count">
@@ -27,17 +27,18 @@ export function ResultsSection({ results }: ResultsSectionProps) {
               </p>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
               {viewMode === "cards" && (
                 <Button
                   variant={groupByCompany ? "secondary" : "outline"}
                   size="sm"
                   onClick={() => setGroupByCompany(!groupByCompany)}
                   data-testid="button-group-by-company"
-                  className="gap-2"
+                  className="w-full gap-2 min-h-[44px] sm:w-auto sm:min-h-0"
                 >
                   <Users className="h-4 w-4" />
-                  Group by Company
+                  <span className="sm:hidden">Group by Company</span>
+                  <span className="hidden sm:inline">Group by Company</span>
                 </Button>
               )}
               
@@ -47,16 +48,20 @@ export function ResultsSection({ results }: ResultsSectionProps) {
                   size="sm"
                   onClick={() => setViewMode("table")}
                   data-testid="button-view-table"
+                  className="flex-1 gap-2 min-h-[44px] sm:flex-none sm:min-h-0"
                 >
                   <Table className="h-4 w-4" />
+                  <span className="sm:hidden">Table</span>
                 </Button>
                 <Button
                   variant={viewMode === "cards" ? "secondary" : "ghost"}
                   size="sm"
                   onClick={() => setViewMode("cards")}
                   data-testid="button-view-cards"
+                  className="flex-1 gap-2 min-h-[44px] sm:flex-none sm:min-h-0"
                 >
                   <LayoutGrid className="h-4 w-4" />
+                  <span className="sm:hidden">Cards</span>
                 </Button>
               </div>
             </div>

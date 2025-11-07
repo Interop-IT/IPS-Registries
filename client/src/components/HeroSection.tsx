@@ -8,17 +8,17 @@ interface HeroSectionProps {
 
 export function HeroSection({ totalVendors, totalResults, latestEvent }: HeroSectionProps) {
   return (
-    <section className="bg-gradient-to-b from-primary/5 to-background py-12">
-      <div className="container px-6">
+    <section className="bg-gradient-to-b from-primary/5 to-background py-8 md:py-12">
+      <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-4xl font-bold tracking-tight">
+          <h2 className="text-2xl font-bold tracking-tight md:text-4xl">
             International Patient Summary Testing Results
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <p className="mt-3 text-base text-muted-foreground md:mt-4 md:text-lg">
             Search and explore vendors that have tested IPS at various healthcare interoperability events worldwide
           </p>
           
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3 md:mt-8 md:gap-4">
             <div className="rounded-lg border bg-card p-4">
               <div className="flex items-center justify-center gap-2 text-primary">
                 <Users className="h-5 w-5" />
@@ -38,7 +38,7 @@ export function HeroSection({ totalVendors, totalResults, latestEvent }: HeroSec
             <div className="rounded-lg border bg-card p-4">
               <div className="flex items-center justify-center gap-2 text-primary">
                 <Calendar className="h-5 w-5" />
-                <span className="text-2xl font-bold" data-testid="text-latest-event">{latestEvent}</span>
+                <span className="text-base font-bold sm:text-2xl" data-testid="text-latest-event">{latestEvent}</span>
               </div>
               <p className="mt-1 text-sm text-muted-foreground">Latest Event</p>
             </div>

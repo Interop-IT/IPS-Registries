@@ -44,7 +44,16 @@ Preferred communication style: Simple, everyday language.
 - Multi-select filters with search-within-dropdown capability
 - Card view includes optional "Group by Company" toggle for organizing results by vendor
 - Clickable company names in card view that link to company websites (when available)
-- Responsive design from mobile to desktop
+- Responsive design from mobile to desktop with mobile-optimized navigation and interactions
+
+**Mobile Experience**:
+- Hamburger menu navigation using Sheet component (slides in from right)
+- Compact header with smaller logo and responsive text on mobile
+- Filter drawer slides up from bottom on mobile (replaces inline filters)
+- All interactive buttons meet 44px minimum touch target on mobile
+- View toggle buttons show text labels on mobile for clarity
+- Responsive padding and spacing optimized for touch interactions
+- Single-column card layout on mobile devices
 
 ### Backend Architecture
 
