@@ -23,8 +23,6 @@ export function ContactPanel({ primaryContact, contactEmail, projectName }: Cont
     }
   };
 
-  const hasAny = names.length > 0 || emails.length > 0;
-
   return (
     <div className="space-y-5" data-testid="contact-panel">
       {projectName && (
@@ -33,18 +31,16 @@ export function ContactPanel({ primaryContact, contactEmail, projectName }: Cont
         </p>
       )}
 
-      {!hasAny && (
-        <p className="text-sm text-muted-foreground" data-testid="text-no-contacts">
-          No contact information available.
-        </p>
-      )}
-
-      {names.length > 0 && (
-        <div>
-          <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
-            <UserCircle className="h-4 w-4 text-muted-foreground" />
-            Primary Contact{names.length > 1 ? "s" : ""}
-          </div>
+      <div data-testid="section-primary-contacts">
+        <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
+          <UserCircle className="h-4 w-4 text-muted-foreground" />
+          Primary Contact{names.length === 1 ? "" : "s"}
+        </div>
+        {names.length === 0 ? (
+          <p className="pl-6 text-sm text-muted-foreground" data-testid="text-no-primary-contacts">
+            None provided
+          </p>
+        ) : (
           <ul className="space-y-1.5 pl-6">
             {names.map((name, i) => (
               <li
@@ -56,15 +52,19 @@ export function ContactPanel({ primaryContact, contactEmail, projectName }: Cont
               </li>
             ))}
           </ul>
-        </div>
-      )}
+        )}
+      </div>
 
-      {emails.length > 0 && (
-        <div>
-          <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
-            <Mail className="h-4 w-4 text-muted-foreground" />
-            Contact Email{emails.length > 1 ? "s" : ""}
-          </div>
+      <div data-testid="section-contact-emails">
+        <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
+          <Mail className="h-4 w-4 text-muted-foreground" />
+          Contact Email{emails.length === 1 ? "" : "s"}
+        </div>
+        {emails.length === 0 ? (
+          <p className="pl-6 text-sm text-muted-foreground" data-testid="text-no-contact-emails">
+            None provided
+          </p>
+        ) : (
           <ul className="space-y-1.5 pl-6">
             {emails.map((email, i) => {
               const isEmail = /\S+@\S+\.\S+/.test(email);
@@ -101,8 +101,8 @@ export function ContactPanel({ primaryContact, contactEmail, projectName }: Cont
               );
             })}
           </ul>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

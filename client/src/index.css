@@ -361,13 +361,15 @@
     inset: -1px;
   }
 }
-/* ---------- Flip Card (Implementation Registry contact reveal) ---------- */
+/* ---------- Flip Card (Implementation Registry contact reveal) ----------
+   Both faces share a single CSS-grid cell so the container sizes to the
+   tallest face, preventing back-face clipping when contact info is long. */
 .flip-card {
   perspective: 1200px;
-  position: relative;
 }
 .flip-card-inner {
-  position: relative;
+  display: grid;
+  grid-template-areas: "stack";
   width: 100%;
   transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
   transform-style: preserve-3d;
@@ -376,16 +378,18 @@
   transform: rotateY(180deg);
 }
 .flip-card-face {
+  grid-area: stack;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-}
-.flip-card-inner > .flip-card-face + .flip-card-face {
-  position: absolute;
-  inset: 0;
-  height: 100%;
+  width: 100%;
 }
 .flip-card-back {
   transform: rotateY(180deg);
+}
+/* Prevent interaction with the hidden face */
+.flip-card-inner:not(.is-flipped) .flip-card-back,
+.flip-card-inner.is-flipped > .flip-card-face:not(.flip-card-back) {
+  pointer-events: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .flip-card-inner { transition: none; }
