@@ -43,3 +43,37 @@ export const vendorResultSchema = z.object({
 });
 
 export type InsertVendorResult = z.infer<typeof vendorResultSchema>;
+
+// IPS Implementation Registry (organized by jurisdiction)
+export interface IpsImplementation {
+  jurisdiction: string;
+  projectName?: string;
+  primaryContact?: string;
+  contactEmail?: string;
+  infoWebsite?: string;
+  approach?: string;
+  dataDomainsLink?: string;
+}
+
+export const ipsImplementationSchema = z.object({
+  jurisdiction: z.string(),
+  projectName: z.string().optional(),
+  primaryContact: z.string().optional(),
+  contactEmail: z.string().optional(),
+  infoWebsite: z.string().optional(),
+  approach: z.string().optional(),
+  dataDomainsLink: z.string().optional(),
+});
+
+export type InsertIpsImplementation = z.infer<typeof ipsImplementationSchema>;
+
+// Helper: split a contact / email field that may contain newlines, semicolons,
+// commas, or bullet-dash prefixes ("- name"). Returns trimmed unique values.
+export function splitContactList(raw?: string): string[] {
+  if (!raw) return [];
+  const parts = raw
+    .split(/[\n;]+|,(?=\s*[A-Za-z0-9])/g)
+    .map((p) => p.replace(/^\s*[-•*]\s*/, "").trim())
+    .filter((p) => p.length > 0);
+  return Array.from(new Set(parts));
+}

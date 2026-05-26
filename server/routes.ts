@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { fetchVendorResults } from "./googleSheets";
+import { fetchVendorResults, fetchIpsImplementations } from "./googleSheets";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API route to get vendor results from Google Sheets
@@ -11,9 +11,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(results);
     } catch (error) {
       console.error("Error fetching vendor results:", error);
-      res.status(500).json({ 
+      res.status(500).json({
         error: "Failed to fetch vendor results",
-        message: error instanceof Error ? error.message : "Unknown error"
+        message: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  });
+
+  // API route to get IPS Implementation Registry entries from Google Sheets
+  app.get("/api/implementations", async (req, res) => {
+    try {
+      const results = await fetchIpsImplementations();
+      res.json(results);
+    } catch (error) {
+      console.error("Error fetching IPS implementations:", error);
+      res.status(500).json({
+        error: "Failed to fetch IPS implementations",
+        message: error instanceof Error ? error.message : "Unknown error",
       });
     }
   });

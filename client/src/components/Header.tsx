@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { Link, useLocation } from "wouter";
 import { ThemeToggle } from "./ThemeToggle";
 import ipsLogo from "@assets/image_1762374965666.png";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -11,14 +12,29 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
+type NavLink = {
+  href: string;
+  label: string;
+  testId: string;
+  external?: boolean;
+};
+
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [location] = useLocation();
 
-  const navLinks = [
-    { href: "#home", label: "Home", testId: "link-home" },
-    { href: "#search", label: "Search", testId: "link-search" },
-    { href: "https://international-patient-summary.net/", label: "About IPS", testId: "link-about", external: true },
+  const navLinks: NavLink[] = [
+    { href: "/", label: "Testing Results", testId: "link-results" },
+    { href: "/implementations", label: "Implementation Registry", testId: "link-implementations" },
+    {
+      href: "https://international-patient-summary.net/",
+      label: "About IPS",
+      testId: "link-about",
+      external: true,
+    },
   ];
+
+  const linkColor = { color: "hsl(348, 83%, 47%)" } as const;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -41,19 +57,39 @@ export function Header() {
         </div>
         
         {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-6 md:flex">
-          {navLinks.map((link) => (
-            <a 
-              key={link.href}
-              href={link.href}
-              {...(link.external && { target: "_blank", rel: "noopener noreferrer" })}
-              className="text-sm font-semibold transition-colors hover-elevate"
-              style={{ color: 'hsl(348, 83%, 47%)' }}
-              data-testid={link.testId}
-            >
-              {link.label}
-            </a>
-          ))}
+        <nav className="hidden items-center gap-2 md:flex">
+          {navLinks.map((link) => {
+            const isActive = !link.external && location === link.href;
+            const className = `rounded-md px-3 py-2 text-sm font-semibold transition-colors hover-elevate ${
+              isActive ? "underline underline-offset-4" : ""
+            }`;
+            if (link.external) {
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                  style={linkColor}
+                  data-testid={link.testId}
+                >
+                  {link.label}
+                </a>
+              );
+            }
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={className}
+                style={linkColor}
+                data-testid={link.testId}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
           <ThemeToggle />
         </nav>
 
@@ -77,20 +113,39 @@ export function Header() {
                   Navigation
                 </SheetTitle>
               </SheetHeader>
-              <nav className="mt-6 flex flex-col gap-4">
-                {navLinks.map((link) => (
-                  <a 
-                    key={link.href}
-                    href={link.href}
-                    {...(link.external && { target: "_blank", rel: "noopener noreferrer" })}
-                    className="text-base font-semibold transition-colors hover-elevate active-elevate-2 rounded-md p-3"
-                    style={{ color: 'hsl(348, 83%, 47%)' }}
-                    data-testid={`mobile-${link.testId}`}
-                    onClick={() => setOpen(false)}
-                  >
-                    {link.label}
-                  </a>
-                ))}
+              <nav className="mt-6 flex flex-col gap-2">
+                {navLinks.map((link) => {
+                  const className =
+                    "text-base font-semibold transition-colors hover-elevate active-elevate-2 rounded-md p-3 min-h-[44px] flex items-center";
+                  if (link.external) {
+                    return (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={className}
+                        style={linkColor}
+                        data-testid={`mobile-${link.testId}`}
+                        onClick={() => setOpen(false)}
+                      >
+                        {link.label}
+                      </a>
+                    );
+                  }
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={className}
+                      style={linkColor}
+                      data-testid={`mobile-${link.testId}`}
+                      onClick={() => setOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
               </nav>
             </SheetContent>
           </Sheet>
