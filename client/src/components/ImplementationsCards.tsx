@@ -72,7 +72,7 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
       <div className={`flip-card-inner ${flipped ? "is-flipped" : ""}`}>
         {/* FRONT */}
         <Card
-          className="flip-card-face"
+          className="flip-card-face h-full"
           data-testid={`card-impl-${index}`}
           aria-hidden={flipped}
         >
@@ -137,6 +137,7 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
           data-testid={`card-impl-back-${index}`}
           aria-hidden={!flipped}
         >
+          <div className="flip-card-back-scroll flex h-full flex-col">
           <CardHeader>
             <div className="flex items-center justify-between gap-2">
               <CardTitle className="text-base" data-testid={`text-back-title-${index}`}>
@@ -154,13 +155,14 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
               </Button>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1">
             <ContactPanel
               primaryContact={impl.primaryContact}
               contactEmail={impl.contactEmail}
               projectName={impl.projectName}
             />
           </CardContent>
+          </div>
         </Card>
       </div>
     </div>
