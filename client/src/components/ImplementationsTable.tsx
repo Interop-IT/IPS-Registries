@@ -146,7 +146,7 @@ export function ImplementationsTable({ results }: Props) {
                         onClick={() => setSelected(row)}
                         disabled={contactCount === 0}
                         data-testid={`button-view-contacts-${index}`}
-                        className="gap-2"
+                        className="gap-2 min-h-11 sm:min-h-9"
                       >
                         <Users className="h-4 w-4" />
                         Contacts{contactCount > 0 ? ` (${contactCount})` : ""}

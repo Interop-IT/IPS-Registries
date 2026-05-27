@@ -117,7 +117,7 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
             <div className="mt-auto pt-3">
               <Button
                 variant="outline"
-                className="w-full gap-2"
+                className="w-full gap-2 min-h-11 sm:min-h-9"
                 onClick={onContactsClick}
                 disabled={!hasContacts}
                 data-testid={`button-view-contacts-${index}`}
