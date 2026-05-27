@@ -71,11 +71,11 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
       <div className={`flip-card-inner ${flipped ? "is-flipped" : ""}`}>
         {/* FRONT */}
         <Card
-          className="flip-card-face h-full"
+          className="flip-card-face flex h-full flex-col"
           data-testid={`card-impl-${index}`}
           aria-hidden={flipped}
         >
-          <CardHeader>
+          <CardHeader className="pb-3">
             <CardTitle className="flex items-start gap-2 text-base">
               <Building2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
               <span className="line-clamp-2" data-testid={`text-jurisdiction-${index}`}>
@@ -83,7 +83,7 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
               </span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex h-full flex-col gap-2.5">
+          <CardContent className="flex flex-1 flex-col gap-2.5">
             {impl.projectName && (
               <div className="flex items-start gap-2 text-sm">
                 <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
