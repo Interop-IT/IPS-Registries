@@ -7,12 +7,22 @@ interface ContactPanelProps {
   primaryContact?: string;
   contactEmail?: string;
   projectName?: string;
+  /** Tighter spacing for use inside the flipped card back. */
+  compact?: boolean;
 }
 
-export function ContactPanel({ primaryContact, contactEmail, projectName }: ContactPanelProps) {
+export function ContactPanel({
+  primaryContact,
+  contactEmail,
+  projectName,
+  compact = false,
+}: ContactPanelProps) {
   const { toast } = useToast();
   const names = splitContactList(primaryContact);
   const emails = splitContactList(contactEmail);
+  const rootSpacing = compact ? "space-y-3" : "space-y-5";
+  const headerSpacing = compact ? "mb-1" : "mb-2";
+  const listSpacing = compact ? "space-y-1" : "space-y-1.5";
 
   const copyEmail = async (email: string) => {
     try {
@@ -24,15 +34,15 @@ export function ContactPanel({ primaryContact, contactEmail, projectName }: Cont
   };
 
   return (
-    <div className="space-y-5" data-testid="contact-panel">
-      {projectName && (
+    <div className={rootSpacing} data-testid="contact-panel">
+      {projectName && !compact && (
         <p className="text-sm text-muted-foreground" data-testid="text-contact-project">
           {projectName}
         </p>
       )}
 
       <div data-testid="section-primary-contacts">
-        <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
+        <div className={`${headerSpacing} flex items-center gap-2 text-sm font-semibold`}>
           <UserCircle className="h-4 w-4 text-muted-foreground" />
           Primary Contact{names.length === 1 ? "" : "s"}
         </div>
@@ -41,7 +51,7 @@ export function ContactPanel({ primaryContact, contactEmail, projectName }: Cont
             None provided
           </p>
         ) : (
-          <ul className="space-y-1.5 pl-6">
+          <ul className={`${listSpacing} pl-6`}>
             {names.map((name, i) => (
               <li
                 key={`name-${i}`}
@@ -56,7 +66,7 @@ export function ContactPanel({ primaryContact, contactEmail, projectName }: Cont
       </div>
 
       <div data-testid="section-contact-emails">
-        <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
+        <div className={`${headerSpacing} flex items-center gap-2 text-sm font-semibold`}>
           <Mail className="h-4 w-4 text-muted-foreground" />
           Contact Email{emails.length === 1 ? "" : "s"}
         </div>
@@ -65,7 +75,7 @@ export function ContactPanel({ primaryContact, contactEmail, projectName }: Cont
             None provided
           </p>
         ) : (
-          <ul className="space-y-1.5 pl-6">
+          <ul className={`${listSpacing} pl-6`}>
             {emails.map((email, i) => {
               const isEmail = /\S+@\S+\.\S+/.test(email);
               return (

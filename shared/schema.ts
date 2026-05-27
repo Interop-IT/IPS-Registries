@@ -77,3 +77,16 @@ export function splitContactList(raw?: string): string[] {
     .filter((p) => p.length > 0);
   return Array.from(new Set(parts));
 }
+
+// Distinct contact "people" count for an implementation. We treat a
+// paired primary-contact name + email as a single person, so the count
+// is the larger of the two split lists (handles 0/1/many on either side).
+export function distinctContactCount(
+  primaryContact?: string,
+  contactEmail?: string,
+): number {
+  return Math.max(
+    splitContactList(primaryContact).length,
+    splitContactList(contactEmail).length,
+  );
+}

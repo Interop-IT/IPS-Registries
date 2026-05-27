@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { IpsImplementation } from "@shared/schema";
-import { splitContactList } from "@shared/schema";
+import { distinctContactCount } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Globe, FileText, MapPin, Building2, ExternalLink, Users, ArrowLeft } from "lucide-react";
@@ -54,8 +54,7 @@ interface FlipCardProps {
 function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
   const [flipped, setFlipped] = useState(false);
   const isMobile = useIsMobile();
-  const contactCount =
-    splitContactList(impl.primaryContact).length + splitContactList(impl.contactEmail).length;
+  const contactCount = distinctContactCount(impl.primaryContact, impl.contactEmail);
   const hasContacts = contactCount > 0;
 
   const onContactsClick = () => {
@@ -84,7 +83,7 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
               </span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="flex h-full flex-col gap-2.5">
             {impl.projectName && (
               <div className="flex items-start gap-2 text-sm">
                 <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
@@ -115,17 +114,18 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
               url={impl.dataDomainsLink}
               testId={`link-domains-${index}`}
             />
-            <div className="pt-2">
+            <div className="mt-auto pt-3">
               <Button
                 variant="outline"
-                size="sm"
-                className="w-full gap-1.5 min-h-[44px] sm:min-h-0"
+                className="w-full gap-2"
                 onClick={onContactsClick}
                 disabled={!hasContacts}
                 data-testid={`button-view-contacts-${index}`}
               >
-                <Users className="h-3.5 w-3.5" />
-                {hasContacts ? `View Contacts (${contactCount})` : "No Contacts"}
+                <Users className="h-4 w-4" />
+                {hasContacts
+                  ? `View Contact${contactCount === 1 ? "" : "s"} (${contactCount})`
+                  : "No Contacts"}
               </Button>
             </div>
           </CardContent>
@@ -138,30 +138,31 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
           aria-hidden={!flipped}
         >
           <div className="flip-card-back-scroll flex h-full flex-col">
-          <CardHeader>
-            <div className="flex items-center justify-between gap-2">
-              <CardTitle className="text-base" data-testid={`text-back-title-${index}`}>
-                {impl.jurisdiction} — Contacts
-              </CardTitle>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setFlipped(false)}
-                aria-label="Back to card front"
-                data-testid={`button-flip-back-${index}`}
-              >
-                <ArrowLeft className="mr-1 h-4 w-4" />
-                Back
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="flex-1">
-            <ContactPanel
-              primaryContact={impl.primaryContact}
-              contactEmail={impl.contactEmail}
-              projectName={impl.projectName}
-            />
-          </CardContent>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between gap-2">
+                <CardTitle className="text-base" data-testid={`text-back-title-${index}`}>
+                  {impl.jurisdiction} — Contacts
+                </CardTitle>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setFlipped(false)}
+                  aria-label="Back to card front"
+                  data-testid={`button-flip-back-${index}`}
+                >
+                  <ArrowLeft className="mr-1 h-4 w-4" />
+                  Back
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1 pt-0">
+              <ContactPanel
+                primaryContact={impl.primaryContact}
+                contactEmail={impl.contactEmail}
+                projectName={impl.projectName}
+                compact
+              />
+            </CardContent>
           </div>
         </Card>
       </div>

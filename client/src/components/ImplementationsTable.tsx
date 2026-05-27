@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { IpsImplementation } from "@shared/schema";
-import { splitContactList } from "@shared/schema";
+import { distinctContactCount } from "@shared/schema";
 import { ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -119,9 +119,10 @@ export function ImplementationsTable({ results }: Props) {
               </TableRow>
             ) : (
               sorted.map((row, index) => {
-                const contactCount =
-                  splitContactList(row.primaryContact).length +
-                  splitContactList(row.contactEmail).length;
+                const contactCount = distinctContactCount(
+                  row.primaryContact,
+                  row.contactEmail,
+                );
                 return (
                   <TableRow key={`${row.jurisdiction}-${index}`} data-testid={`row-impl-${index}`}>
                     <TableCell className="font-medium" data-testid={`text-jurisdiction-${index}`}>
@@ -142,13 +143,12 @@ export function ImplementationsTable({ results }: Props) {
                     <TableCell className="text-right">
                       <Button
                         variant="outline"
-                        size="sm"
                         onClick={() => setSelected(row)}
                         disabled={contactCount === 0}
                         data-testid={`button-view-contacts-${index}`}
-                        className="gap-1.5"
+                        className="gap-2"
                       >
-                        <Users className="h-3.5 w-3.5" />
+                        <Users className="h-4 w-4" />
                         Contacts{contactCount > 0 ? ` (${contactCount})` : ""}
                       </Button>
                     </TableCell>
