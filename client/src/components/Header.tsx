@@ -40,12 +40,20 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4 md:h-20 md:px-6">
         <div className="flex items-center gap-2 md:gap-4">
-          <img 
-            src={ipsLogo} 
-            alt="IPS Logo" 
-            className="h-10 w-auto md:h-16"
-            data-testid="img-logo"
-          />
+          <a
+            href="https://international-patient-summary.net/ips-vendor-support/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 rounded-md hover-elevate"
+            data-testid="link-logo"
+          >
+            <img 
+              src={ipsLogo} 
+              alt="IPS Logo" 
+              className="h-10 w-auto md:h-16"
+              data-testid="img-logo"
+            />
+          </a>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold leading-none md:text-xl" style={{ color: 'hsl(348, 83%, 47%)' }}>
               IPS Results Registry
