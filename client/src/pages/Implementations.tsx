@@ -21,7 +21,7 @@ export default function Implementations() {
     searchQuery: "",
   });
   const [viewMode, setViewMode] = useState<"table" | "cards">("table");
-  const [groupByJurisdiction, setGroupByJurisdiction] = useState(false);
+  const [groupByContinent, setGroupByContinent] = useState(false);
 
   const { data, isLoading, error } = useQuery<IpsImplementation[]>({
     queryKey: ["/api/implementations"],
@@ -175,13 +175,13 @@ export default function Implementations() {
                 {viewMode === "cards" && (
                   <div className="flex items-center gap-2">
                     <Switch
-                      id="group-jurisdiction"
-                      checked={groupByJurisdiction}
-                      onCheckedChange={setGroupByJurisdiction}
-                      data-testid="switch-group-jurisdiction"
+                      id="group-continent"
+                      checked={groupByContinent}
+                      onCheckedChange={setGroupByContinent}
+                      data-testid="switch-group-continent"
                     />
-                    <Label htmlFor="group-jurisdiction" className="text-sm cursor-pointer">
-                      Group by Jurisdiction
+                    <Label htmlFor="group-continent" className="text-sm cursor-pointer">
+                      Group by Continent
                     </Label>
                   </div>
                 )}
@@ -215,7 +215,7 @@ export default function Implementations() {
             ) : (
               <ImplementationsCards
                 results={filtered}
-                groupByJurisdiction={groupByJurisdiction}
+                groupByContinent={groupByContinent}
               />
             )}
           </div>

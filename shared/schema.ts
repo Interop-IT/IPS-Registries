@@ -90,3 +90,85 @@ export function distinctContactCount(
     splitContactList(contactEmail).length,
   );
 }
+
+// Continent grouping for the Implementation Registry. The "Other" bucket
+// captures anything that isn't a recognizable country (e.g. "WHO") and
+// always sorts last.
+export const CONTINENT_ORDER = [
+  "Africa",
+  "Asia",
+  "Europe",
+  "North America",
+  "South America",
+  "Oceania",
+  "Other",
+] as const;
+
+export type Continent = (typeof CONTINENT_ORDER)[number];
+
+// Map of normalized jurisdiction name -> continent. Keys are lowercased and
+// trimmed. Includes common misspellings and alternate / sub-national names
+// found in the source sheet (e.g. "Columbia", "El Savador", "England").
+const COUNTRY_TO_CONTINENT: Record<string, Continent> = {
+  // North America
+  "usa": "North America",
+  "united states": "North America",
+  "united states of america": "North America",
+  "canada": "North America",
+  "mexico": "North America",
+  "bahamas": "North America",
+  "belize": "North America",
+  "costa rica": "North America",
+  "el salvador": "North America",
+  "el savador": "North America",
+  "guatemala": "North America",
+  "haiti": "North America",
+  "honduras": "North America",
+  "panama": "North America",
+  // South America
+  "argentina": "South America",
+  "brazil": "South America",
+  "chile": "South America",
+  "colombia": "South America",
+  "columbia": "South America",
+  "ecuador": "South America",
+  "equador": "South America",
+  "paraguay": "South America",
+  "paraquay": "South America",
+  "peru": "South America",
+  "suriname": "South America",
+  "uruguay": "South America",
+  // Europe
+  "austria": "Europe",
+  "denmark": "Europe",
+  "england": "Europe",
+  "estonia": "Europe",
+  "finland": "Europe",
+  "france": "Europe",
+  "georgia": "Europe",
+  "germany": "Europe",
+  "italy": "Europe",
+  "latvia": "Europe",
+  "lithuania": "Europe",
+  "netherlands": "Europe",
+  "sweden": "Europe",
+  "switzerland": "Europe",
+  "united kingdom": "Europe",
+  // Asia
+  "indonesia": "Asia",
+  "japan": "Asia",
+  "malaysia": "Asia",
+  "sri lanka": "Asia",
+  "vietnam": "Asia",
+  // Oceania
+  "australia": "Oceania",
+  "fiji": "Oceania",
+  "new zealand": "Oceania",
+};
+
+// Resolve a jurisdiction string to its continent, falling back to "Other"
+// for unrecognized values (e.g. organizations like "WHO").
+export function continentForJurisdiction(jurisdiction: string): Continent {
+  const key = jurisdiction.trim().toLowerCase();
+  return COUNTRY_TO_CONTINENT[key] ?? "Other";
+}

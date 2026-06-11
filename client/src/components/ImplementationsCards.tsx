@@ -1,6 +1,10 @@
 import { useState } from "react";
 import type { IpsImplementation } from "@shared/schema";
-import { distinctContactCount } from "@shared/schema";
+import {
+  distinctContactCount,
+  continentForJurisdiction,
+  CONTINENT_ORDER,
+} from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Globe, FileText, MapPin, Building2, ExternalLink, Users, ArrowLeft } from "lucide-react";
@@ -10,7 +14,7 @@ import { ContactPanel } from "./ContactPanel";
 
 interface Props {
   results: IpsImplementation[];
-  groupByJurisdiction?: boolean;
+  groupByContinent?: boolean;
 }
 
 function LinkRow({
@@ -174,7 +178,7 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
   );
 }
 
-export function ImplementationsCards({ results, groupByJurisdiction = false }: Props) {
+export function ImplementationsCards({ results, groupByContinent = false }: Props) {
   const [modalImpl, setModalImpl] = useState<IpsImplementation | null>(null);
 
   if (results.length === 0) {
@@ -202,28 +206,28 @@ export function ImplementationsCards({ results, groupByJurisdiction = false }: P
   );
 
   let content;
-  if (groupByJurisdiction) {
+  if (groupByContinent) {
     const grouped = results.reduce((acc, r) => {
-      const j = r.jurisdiction;
-      if (!acc[j]) acc[j] = [];
-      acc[j].push(r);
+      const c = continentForJurisdiction(r.jurisdiction);
+      if (!acc[c]) acc[c] = [];
+      acc[c].push(r);
       return acc;
     }, {} as Record<string, IpsImplementation[]>);
-    const sortedKeys = Object.keys(grouped).sort();
+    const sortedKeys = CONTINENT_ORDER.filter((c) => grouped[c]?.length);
     content = (
       <div className="space-y-8">
-        {sortedKeys.map((j) => (
-          <div key={j} className="space-y-4">
+        {sortedKeys.map((c) => (
+          <div key={c} className="space-y-4">
             <div className="flex items-center gap-3 border-b pb-2">
-              <Building2 className="h-5 w-5 text-primary" />
-              <h3 className="text-lg font-semibold" data-testid={`text-jurisdiction-header-${j}`}>
-                {j}
+              <Globe className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold" data-testid={`text-continent-header-${c}`}>
+                {c}
               </h3>
               <span className="text-sm text-muted-foreground">
-                ({grouped[j].length} {grouped[j].length === 1 ? "entry" : "entries"})
+                ({grouped[c].length} {grouped[c].length === 1 ? "entry" : "entries"})
               </span>
             </div>
-            {renderGrid(grouped[j], `${j}-`)}
+            {renderGrid(grouped[c], `${c}-`)}
           </div>
         ))}
       </div>
