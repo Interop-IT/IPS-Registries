@@ -67,7 +67,11 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
   };
 
   return (
-    <div className="flip-card" data-testid={`flip-card-${index}`}>
+    <div
+      className="flip-card card-enter"
+      style={{ animationDelay: `${Math.min(index * 40, 320)}ms` }}
+      data-testid={`flip-card-${index}`}
+    >
       <div className={`flip-card-inner ${flipped ? "is-flipped" : ""}`}>
         {/* FRONT */}
         <Card

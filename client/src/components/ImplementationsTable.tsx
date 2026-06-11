@@ -92,7 +92,7 @@ export function ImplementationsTable({ results }: Props) {
   return (
     <>
       <div className="rounded-lg border overflow-x-auto">
-        <Table>
+        <Table className="zebra-table">
           <TableHeader>
             <TableRow>
               <TableHead>

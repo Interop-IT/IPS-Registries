@@ -404,3 +404,53 @@
 @media (prefers-reduced-motion: reduce) {
   .flip-card-inner { transition: none; }
 }
+
+/* Soft hover lift on the front card face (no layout shift — box-shadow only) */
+.flip-card-face:not(.flip-card-back) {
+  transition: box-shadow 0.25s ease;
+}
+.flip-card:hover .flip-card-inner:not(.is-flipped) .flip-card-face:not(.flip-card-back) {
+  box-shadow: var(--shadow-md);
+}
+
+/* ---------- Implementation Registry visual polish ---------- */
+/* Gentle staggered card entrance */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.card-enter {
+  animation: card-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Subtle zebra striping + soft on-brand hover for the registry table */
+.zebra-table thead tr {
+  background-color: hsl(var(--muted) / 0.6);
+}
+.zebra-table tbody tr {
+  transition: background-color 0.18s ease;
+}
+.zebra-table tbody tr:nth-child(even) {
+  background-color: hsl(var(--muted) / 0.5);
+}
+.zebra-table tbody tr:hover {
+  background-color: hsl(var(--primary) / 0.07);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-enter {
+    animation: none;
+  }
+  .flip-card-face:not(.flip-card-back) {
+    transition: none;
+  }
+  .zebra-table tbody tr {
+    transition: none;
+  }
+}
