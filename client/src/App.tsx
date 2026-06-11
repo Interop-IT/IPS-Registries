@@ -10,8 +10,9 @@ import Implementations from "@/pages/Implementations";
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Home} />
+      <Route path="/" component={Implementations} />
       <Route path="/implementations" component={Implementations} />
+      <Route path="/results" component={Home} />
       <Route component={NotFound} />
     </Switch>
   );

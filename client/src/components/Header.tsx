@@ -24,8 +24,8 @@ export function Header() {
   const [location] = useLocation();
 
   const navLinks: NavLink[] = [
-    { href: "/", label: "Testing Results", testId: "link-results" },
-    { href: "/implementations", label: "Implementation Registry", testId: "link-implementations" },
+    { href: "/", label: "Implementation Registry", testId: "link-implementations" },
+    { href: "/results", label: "Testing Results", testId: "link-results" },
     {
       href: "https://international-patient-summary.net/",
       label: "About IPS",
