@@ -42,8 +42,6 @@ export function Header() {
         <div className="flex items-center gap-2 md:gap-4">
           <a
             href="https://international-patient-summary.net/ips-vendor-support/"
-            target="_blank"
-            rel="noopener noreferrer"
             className="shrink-0 rounded-md hover-elevate"
             data-testid="link-logo"
           >
