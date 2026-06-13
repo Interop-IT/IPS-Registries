@@ -61,7 +61,7 @@ export function Footer() {
           </div>
           
           <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
-            <p>© {new Date().getFullYear()} IPS Results Registry. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} IPS Registries. All rights reserved.</p>
           </div>
         </div>
       </div>

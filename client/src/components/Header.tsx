@@ -54,7 +54,7 @@ export function Header() {
           </a>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold leading-none md:text-xl" style={{ color: 'hsl(348, 83%, 47%)' }}>
-              IPS Results Registry
+              IPS Registries
             </h1>
             <p className="mt-0.5 hidden text-sm text-muted-foreground sm:block md:mt-1">
               International Patient Summary Testing Results

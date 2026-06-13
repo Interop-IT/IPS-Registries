@@ -1,8 +1,8 @@
-# IPS Results Registry
+# IPS Registries
 
 ## Overview
 
-The IPS Results Registry is a web application for searching and exploring vendors that have tested International Patient Summary (IPS) at various healthcare interoperability events worldwide. This is a data-intensive utility application focused on providing a clean, professional search and filter experience for healthcare testing results.
+The IPS Registries is a web application for searching and exploring vendors that have tested International Patient Summary (IPS) at various healthcare interoperability events worldwide. This is a data-intensive utility application focused on providing a clean, professional search and filter experience for healthcare testing results.
 
 The application displays vendor testing results in both table and card views, with multi-select filtering capabilities across five dimensions: Company, IHE Profile, Actor, Year, and Event. Additionally, a global text search allows users to search across all fields including company information, products, and contact details.
 
