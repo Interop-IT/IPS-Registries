@@ -1,0 +1,2 @@
+---
+- [esbuild 0.28.x + vite 6 incompatibility](esbuild-vite-compat.md) — esbuild 0.28.1 breaks vite's dev optimizer; use scoped override exception for vite.
