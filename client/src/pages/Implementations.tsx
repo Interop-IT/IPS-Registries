@@ -194,7 +194,7 @@ export default function Implementations() {
                     data-testid="button-view-table"
                   >
                     <TableIcon className="h-4 w-4" />
-                    <span>Table</span>
+                    <span>List View</span>
                   </Button>
                   <Button
                     variant={viewMode === "cards" ? "default" : "ghost"}
@@ -204,7 +204,7 @@ export default function Implementations() {
                     data-testid="button-view-cards"
                   >
                     <LayoutGrid className="h-4 w-4" />
-                    <span>Cards</span>
+                    <span>Item View</span>
                   </Button>
                 </div>
               </div>
