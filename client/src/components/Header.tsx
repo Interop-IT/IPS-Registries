@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { ThemeToggle } from "./ThemeToggle";
 import ipsLogo from "@assets/image_1762374965666.png";
 import { Menu } from "lucide-react";
@@ -19,9 +20,17 @@ type NavLink = {
   external?: boolean;
 };
 
+const DEFAULT_IPS_RETURN_URL =
+  "https://international-patient-summary.net/content-all-ips/";
+
 export function Header() {
   const [open, setOpen] = useState(false);
   const [location] = useLocation();
+
+  const { data: config } = useQuery<{ ipsReturnUrl: string }>({
+    queryKey: ["/api/config"],
+  });
+  const ipsReturnUrl = config?.ipsReturnUrl ?? DEFAULT_IPS_RETURN_URL;
 
   const navLinks: NavLink[] = [
     { href: "/", label: "Implementation Registry", testId: "link-implementations" },
@@ -30,6 +39,12 @@ export function Header() {
       href: "https://international-patient-summary.net/",
       label: "About IPS",
       testId: "link-about",
+      external: true,
+    },
+    {
+      href: ipsReturnUrl,
+      label: "Return to IPS website",
+      testId: "link-ips-return",
       external: true,
     },
   ];

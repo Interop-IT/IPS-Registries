@@ -3,7 +3,18 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { fetchVendorResults, fetchIpsImplementations } from "./googleSheets";
 
+const DEFAULT_IPS_RETURN_URL =
+  "https://international-patient-summary.net/content-all-ips/";
+
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Runtime-configurable client config. Read env vars at request time so the
+  // values can be changed without a rebuild (only a server restart).
+  app.get("/api/config", (_req, res) => {
+    res.json({
+      ipsReturnUrl: process.env.IPS_RETURN_URL || DEFAULT_IPS_RETURN_URL,
+    });
+  });
+
   // API route to get vendor results from Google Sheets
   app.get("/api/vendor-results", async (req, res) => {
     try {
