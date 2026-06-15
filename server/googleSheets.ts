@@ -60,6 +60,12 @@ function parseCSVDocument(csvText: string): string[][] {
   return rows;
 }
 
+// Outbound fetch timeout in milliseconds (15 seconds per attempt)
+const FETCH_TIMEOUT_MS = 15_000;
+
+// Cache TTL: 5 minutes
+const CACHE_TTL_MS = 5 * 60 * 1000;
+
 async function fetchSheetCsv(sheetsUrl: string, envVarName: string): Promise<string[][]> {
   if (!sheetsUrl) {
     throw new Error(`${envVarName} environment variable is not set`);
@@ -75,8 +81,11 @@ async function fetchSheetCsv(sheetsUrl: string, envVarName: string): Promise<str
   let lastError: Error | null = null;
 
   for (const csvUrl of urls) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
     try {
       const response = await fetch(csvUrl, {
+        signal: controller.signal,
         redirect: "follow",
         headers: { "User-Agent": "Mozilla/5.0 (compatible; IPSRegistry/1.0)" },
       });
@@ -94,10 +103,52 @@ async function fetchSheetCsv(sheetsUrl: string, envVarName: string): Promise<str
       lastError = new Error("Sheet appears to be empty");
     } catch (err) {
       lastError = err instanceof Error ? err : new Error(String(err));
+    } finally {
+      clearTimeout(timer);
     }
   }
 
   throw lastError || new Error("Failed to fetch sheet data");
+}
+
+// ---------------------------------------------------------------------------
+// Generic cache + request-coalescing wrapper
+// ---------------------------------------------------------------------------
+
+interface CacheEntry<T> {
+  data: T;
+  fetchedAt: number;
+}
+
+function makeSheetFetcher<T>(fetcher: () => Promise<T>): () => Promise<T> {
+  let cache: CacheEntry<T> | null = null;
+  let inFlight: Promise<T> | null = null;
+
+  return async function cachedFetch(): Promise<T> {
+    // Return cached data if still fresh
+    if (cache && Date.now() - cache.fetchedAt < CACHE_TTL_MS) {
+      return cache.data;
+    }
+
+    // Coalesce concurrent requests: if a fetch is already in flight, share it
+    if (inFlight) {
+      return inFlight;
+    }
+
+    inFlight = fetcher().then(
+      (data) => {
+        cache = { data, fetchedAt: Date.now() };
+        inFlight = null;
+        return data;
+      },
+      (err) => {
+        inFlight = null;
+        throw err;
+      },
+    );
+
+    return inFlight;
+  };
 }
 
 function buildColumnMap(headers: string[]): Record<string, number> {
@@ -124,7 +175,7 @@ function getValue(
 
 // ---------- Vendor Results (existing experience) ----------
 
-export async function fetchVendorResults(): Promise<VendorResult[]> {
+async function _fetchVendorResults(): Promise<VendorResult[]> {
   // Prefer dedicated vendor-results URL; fall back to GOOGLE_SHEETS_URL for backward compat
   const sheetsUrl =
     process.env.VENDOR_RESULTS_SHEETS_URL || process.env.GOOGLE_SHEETS_URL || "";
@@ -175,6 +226,8 @@ export async function fetchVendorResults(): Promise<VendorResult[]> {
   return results;
 }
 
+export const fetchVendorResults = makeSheetFetcher(_fetchVendorResults);
+
 // ---------- IPS Implementation Registry (new) ----------
 
 const IMPLEMENTATION_HEADER_KEYS = [
@@ -191,7 +244,7 @@ function findHeaderRowIndex(rows: string[][]): number {
   return 0;
 }
 
-export async function fetchIpsImplementations(): Promise<IpsImplementation[]> {
+async function _fetchIpsImplementations(): Promise<IpsImplementation[]> {
   const sheetsUrl =
     process.env.IPS_IMPLEMENTATIONS_SHEETS_URL || process.env.GOOGLE_SHEETS_URL || "";
   const rows = await fetchSheetCsv(sheetsUrl, "IPS_IMPLEMENTATIONS_SHEETS_URL");
@@ -251,3 +304,5 @@ export async function fetchIpsImplementations(): Promise<IpsImplementation[]> {
   console.log(`Successfully fetched ${results.length} IPS implementations`);
   return results;
 }
+
+export const fetchIpsImplementations = makeSheetFetcher(_fetchIpsImplementations);
