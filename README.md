@@ -65,6 +65,7 @@ Configure the following environment variables (for example, in a `.env` file). D
 | `IPS_IMPLEMENTATIONS_SHEETS_URL` | Yes | Google Sheets URL/ID for the Implementation Registry data |
 | `VENDOR_RESULTS_SHEETS_URL` | Yes | Google Sheets URL/ID for the Vendor Results data |
 | `GOOGLE_SHEETS_URL` | Optional | Fallback sheet URL/ID used when either of the above is not set |
+| `IPS_RETURN_URL` | Optional | Destination for the header's "Return to IPS website" link (defaults to `https://international-patient-summary.net/content-all-ips/`) |
 | `SESSION_SECRET` | Recommended | Secret used to sign server sessions |
 | `PORT` | Optional | Port the server listens on (defaults to `5000`) |
 
@@ -76,5 +77,6 @@ Data is fetched server-side from public Google Sheets CSV exports and served to 
 |----------|-------------|
 | `GET /api/implementations` | IPS implementation records (jurisdictions and projects) |
 | `GET /api/vendor-results` | Vendor interoperability testing results |
+| `GET /api/config` | Runtime client config (e.g. the "Return to IPS website" link URL) |
 
 Sheets are chosen as the data store so non-technical contributors can update the registries directly. The client caches responses with React Query and treats the data as relatively static.
