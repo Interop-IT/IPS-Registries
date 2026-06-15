@@ -23,6 +23,19 @@ type NavLink = {
 const DEFAULT_IPS_RETURN_URL =
   "https://international-patient-summary.net/content-all-ips/";
 
+function sanitizeUrl(value: string | undefined | null): string | undefined {
+  if (!value) return undefined;
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return value;
+    }
+  } catch {
+    // invalid URL — treat as unset
+  }
+  return undefined;
+}
+
 export function Header() {
   const [open, setOpen] = useState(false);
   const [location] = useLocation();
@@ -30,7 +43,7 @@ export function Header() {
   const { data: config } = useQuery<{ ipsReturnUrl: string }>({
     queryKey: ["/api/config"],
   });
-  const ipsReturnUrl = config?.ipsReturnUrl ?? DEFAULT_IPS_RETURN_URL;
+  const ipsReturnUrl = sanitizeUrl(config?.ipsReturnUrl) ?? DEFAULT_IPS_RETURN_URL;
 
   const navLinks: NavLink[] = [
     { href: "/", label: "Implementation Registry", testId: "link-implementations" },

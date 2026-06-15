@@ -6,12 +6,26 @@ import { fetchVendorResults, fetchIpsImplementations } from "./googleSheets";
 const DEFAULT_IPS_RETURN_URL =
   "https://international-patient-summary.net/content-all-ips/";
 
+function resolveIpsReturnUrl(): string {
+  const value = process.env.IPS_RETURN_URL;
+  if (!value) return DEFAULT_IPS_RETURN_URL;
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return value;
+    }
+  } catch {
+    // fall through to default on invalid URL
+  }
+  return DEFAULT_IPS_RETURN_URL;
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Runtime-configurable client config. Read env vars at request time so the
   // values can be changed without a rebuild (only a server restart).
   app.get("/api/config", (_req, res) => {
     res.json({
-      ipsReturnUrl: process.env.IPS_RETURN_URL || DEFAULT_IPS_RETURN_URL,
+      ipsReturnUrl: resolveIpsReturnUrl(),
     });
   });
 
