@@ -30,6 +30,8 @@ function LinkCell({ url, testId }: { url?: string; testId: string }) {
   if (!url) return <span className="text-muted-foreground">-</span>;
   const trimmed = url.trim();
   const href = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  const stripped = trimmed.replace(/^https?:\/\//i, "");
+  const label = stripped.length > 20 ? stripped.slice(0, 20) + "…" : stripped;
   return (
     <a
       href={href}
@@ -38,7 +40,7 @@ function LinkCell({ url, testId }: { url?: string; testId: string }) {
       className="inline-flex items-center gap-1 text-primary hover:underline"
       data-testid={testId}
     >
-      <span className="max-w-[260px] truncate">{trimmed}</span>
+      <span>{label}</span>
       <ExternalLink className="h-3 w-3 shrink-0" />
     </a>
   );
