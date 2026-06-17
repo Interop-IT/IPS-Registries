@@ -18,6 +18,7 @@ type NavLink = {
   label: string;
   testId: string;
   external?: boolean;
+  variant?: "default" | "pill";
 };
 
 const DEFAULT_IPS_RETURN_URL =
@@ -53,6 +54,7 @@ export function Header() {
       label: "Return to IPS website",
       testId: "link-ips-return",
       external: true,
+      variant: "pill",
     },
   ];
 
@@ -88,7 +90,7 @@ export function Header() {
         <nav className="hidden items-center gap-2 md:flex">
           {navLinks.map((link) => {
             const isActive = !link.external && location === link.href;
-            const isPill = link.testId === "link-ips-return";
+            const isPill = link.variant === "pill";
             const className = `px-3 py-2 text-sm font-semibold transition-colors hover-elevate ${
               isPill
                 ? "rounded-full bg-sky-100 dark:bg-sky-900/40"
@@ -146,7 +148,7 @@ export function Header() {
               </SheetHeader>
               <nav className="mt-6 flex flex-col gap-2">
                 {navLinks.map((link) => {
-                  const isPill = link.testId === "link-ips-return";
+                  const isPill = link.variant === "pill";
                   const className = `text-base font-semibold transition-colors hover-elevate active-elevate-2 p-3 min-h-[44px] flex items-center ${
                     isPill
                       ? "rounded-full bg-sky-100 dark:bg-sky-900/40"
