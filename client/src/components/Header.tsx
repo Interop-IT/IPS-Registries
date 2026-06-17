@@ -88,9 +88,12 @@ export function Header() {
         <nav className="hidden items-center gap-2 md:flex">
           {navLinks.map((link) => {
             const isActive = !link.external && location === link.href;
-            const className = `rounded-md px-3 py-2 text-sm font-semibold transition-colors hover-elevate ${
-              isActive ? "underline underline-offset-4" : ""
-            }`;
+            const isPill = link.testId === "link-ips-return";
+            const className = `px-3 py-2 text-sm font-semibold transition-colors hover-elevate ${
+              isPill
+                ? "rounded-full bg-sky-100 dark:bg-sky-900/40"
+                : "rounded-md"
+            } ${isActive ? "underline underline-offset-4" : ""}`;
             if (link.external) {
               return (
                 <a
@@ -143,8 +146,12 @@ export function Header() {
               </SheetHeader>
               <nav className="mt-6 flex flex-col gap-2">
                 {navLinks.map((link) => {
-                  const className =
-                    "text-base font-semibold transition-colors hover-elevate active-elevate-2 rounded-md p-3 min-h-[44px] flex items-center";
+                  const isPill = link.testId === "link-ips-return";
+                  const className = `text-base font-semibold transition-colors hover-elevate active-elevate-2 p-3 min-h-[44px] flex items-center ${
+                    isPill
+                      ? "rounded-full bg-sky-100 dark:bg-sky-900/40"
+                      : "rounded-md"
+                  }`;
                   if (link.external) {
                     return (
                       <a
