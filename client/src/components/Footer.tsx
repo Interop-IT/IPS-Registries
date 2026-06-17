@@ -1,4 +1,5 @@
 import { ExternalLink } from "lucide-react";
+import interopLogo from "@assets/Interop-PNG-ImageTransparent_1781710478896.webp";
 
 export function Footer() {
   return (
@@ -60,8 +61,23 @@ export function Footer() {
             </div>
           </div>
           
-          <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
+          <div className="mt-8 flex flex-col items-center gap-3 border-t pt-6 text-center text-sm text-muted-foreground">
             <p>© {new Date().getFullYear()} IPS Registries. All rights reserved.</p>
+            <a
+              href="https://www.interop.it/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-md text-xs hover-elevate"
+              data-testid="link-powered-by-interop"
+            >
+              <span>Powered by</span>
+              <img
+                src={interopLogo}
+                alt="Interop IT"
+                className="h-5 w-auto"
+                data-testid="img-interop-logo"
+              />
+            </a>
           </div>
         </div>
       </div>
