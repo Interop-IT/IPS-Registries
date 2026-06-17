@@ -49,12 +49,6 @@ export function Header() {
     { href: "/", label: "Implementation Registry", testId: "link-implementations" },
     { href: "/results", label: "Testing Results", testId: "link-results" },
     {
-      href: "https://international-patient-summary.net/",
-      label: "About IPS",
-      testId: "link-about",
-      external: true,
-    },
-    {
       href: ipsReturnUrl,
       label: "Return to IPS website",
       testId: "link-ips-return",
