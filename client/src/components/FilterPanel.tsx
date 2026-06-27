@@ -184,9 +184,10 @@ export function FilterPanel({
                     <button
                       onClick={() => onRemoveFilter(d.key, item)}
                       className="ml-1 rounded-sm hover-elevate"
+                      aria-label={`Remove ${d.badgeLabel} filter: ${item}`}
                       data-testid={`button-${idScope}remove-filter-${item}`}
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-3 w-3" aria-hidden="true" />
                     </button>
                   </Badge>
                 )),
