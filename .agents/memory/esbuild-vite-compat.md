@@ -15,7 +15,7 @@ esbuild 0.28.x has a regression where it cannot transform destructuring for the 
 - `@tailwindcss/vite@^4.3.1` (vite 8 compatible: `^5.2.0 || ^6 || ^7 || ^8`)
 - `@types/node@^20.19.0` (vite 8 peer dep: `^20.19.0 || >=22.12.0`)
 - `esbuild@^0.28.1` in devDependencies (the non-vulnerable version)
-- Global override: `"esbuild": "$esbuild"` in package.json overrides
+- Global override: `"esbuild": "^0.28.1"` in package.json overrides — use the literal range that EXACTLY matches the direct `esbuild` devDependency, NOT the `$esbuild` reference form (see `$esbuild` section below for why)
 
 ## CSS fix required for vite 8 / lightningcss
 Vite 8 switched from cssnano to lightningcss for CSS minification. lightningcss rejects invalid chained pseudo-element selectors (`::after::after`, `::after::before`) that Tailwind JIT generates when `after:*` utilities are used in HTML AND custom classes with `::after`/`::before` are defined in `@layer utilities`.
