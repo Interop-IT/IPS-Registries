@@ -19,6 +19,7 @@ type NavLink = {
   testId: string;
   external?: boolean;
   variant?: "default" | "pill";
+  disabled?: boolean;
 };
 
 const DEFAULT_IPS_RETURN_URL =
@@ -48,7 +49,7 @@ export function Header() {
 
   const navLinks: NavLink[] = [
     { href: "/", label: "Implementation Registry", testId: "link-implementations" },
-    { href: "/results", label: "Testing Results", testId: "link-results" },
+    { href: "/results", label: "Vendor Registry", testId: "link-results", disabled: true },
     {
       href: ipsReturnUrl,
       label: "Return to IPS website",
@@ -81,7 +82,7 @@ export function Header() {
               IPS Registries
             </h1>
             <p className="mt-0.5 hidden text-sm text-muted-foreground sm:block md:mt-1">
-              International Patient Summary Testing Results
+              International Patient Summary
             </p>
           </div>
         </div>
@@ -96,6 +97,18 @@ export function Header() {
                 ? "rounded-full bg-sky-100 dark:bg-sky-900/40"
                 : "rounded-md"
             } ${isActive ? "underline underline-offset-4" : ""}`;
+            if (link.disabled) {
+              return (
+                <span
+                  key={link.href}
+                  className={`${className} cursor-not-allowed text-muted-foreground opacity-50`}
+                  aria-disabled="true"
+                  data-testid={link.testId}
+                >
+                  {link.label}
+                </span>
+              );
+            }
             if (link.external) {
               return (
                 <a
@@ -154,6 +167,18 @@ export function Header() {
                       ? "rounded-full bg-sky-100 dark:bg-sky-900/40"
                       : "rounded-md"
                   }`;
+                  if (link.disabled) {
+                    return (
+                      <span
+                        key={link.href}
+                        className={`${className} cursor-not-allowed text-muted-foreground opacity-50`}
+                        aria-disabled="true"
+                        data-testid={`mobile-${link.testId}`}
+                      >
+                        {link.label}
+                      </span>
+                    );
+                  }
                   if (link.external) {
                     return (
                       <a
