@@ -105,7 +105,9 @@ export function useCascadingFilters<T>({
       const values = rows
         .map((r) => String(r[dim.field] ?? ""))
         .filter((v) => v.length > 0);
-      availableOptions[dim.key] = Array.from(new Set(values)).sort();
+      availableOptions[dim.key] = Array.from(new Set(values)).sort((a, b) =>
+        a.localeCompare(b, undefined, { sensitivity: "base", numeric: true }),
+      );
     }
 
     return { availableOptions, filtered };
