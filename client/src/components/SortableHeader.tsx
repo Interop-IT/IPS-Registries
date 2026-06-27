@@ -33,22 +33,23 @@ export function SortableHeader<T>({
 }: SortableHeaderProps<T>) {
   const isActive = sortKey === column;
 
-  const icon = !isActive ? (
-    <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
-  ) : sortOrder === "asc" ? (
-    <ArrowUp className="ml-2 h-4 w-4" aria-hidden="true" />
-  ) : (
-    <ArrowDown className="ml-2 h-4 w-4" aria-hidden="true" />
-  );
+  let icon = <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />;
+  if (isActive) {
+    icon =
+      sortOrder === "asc" ? (
+        <ArrowUp className="ml-2 h-4 w-4" aria-hidden="true" />
+      ) : (
+        <ArrowDown className="ml-2 h-4 w-4" aria-hidden="true" />
+      );
+  }
 
   // Expose the current sort state to assistive tech instead of relying on the
   // icon alone. aria-sort needs a columnheader role, so describe the state via
   // an accessible label on the sortable control itself.
-  const sortState = !isActive
-    ? "not sorted"
-    : sortOrder === "asc"
-      ? "sorted ascending"
-      : "sorted descending";
+  let sortState = "not sorted";
+  if (isActive) {
+    sortState = sortOrder === "asc" ? "sorted ascending" : "sorted descending";
+  }
 
   return (
     <Button
