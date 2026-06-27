@@ -72,7 +72,7 @@ export function FilterPanel({
   onResetAll,
   onRemoveFilter,
   idScope,
-}: FilterPanelProps) {
+}: Readonly<FilterPanelProps>) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const totalActive =
