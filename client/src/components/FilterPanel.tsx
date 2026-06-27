@@ -15,9 +15,9 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-export interface FilterPanelDimension {
+export interface FilterPanelDimension<K extends string = string> {
   // Filter state key, used to build remove-filter callbacks
-  key: string;
+  key: K;
   // Label shown above the multi-select control
   selectLabel: string;
   // Label prefix shown in active-filter badges
@@ -28,18 +28,18 @@ export interface FilterPanelDimension {
   onChange: (value: string[]) => void;
 }
 
-interface FilterPanelProps {
+interface FilterPanelProps<K extends string = string> {
   // Heading text, shared by the section title and the mobile drawer title
   title: string;
   drawerDescription: string;
   searchPlaceholder: string;
   searchValue: string;
   onSearchChange: (value: string) => void;
-  dimensions: FilterPanelDimension[];
+  dimensions: FilterPanelDimension<K>[];
   // Tailwind classes for the desktop multi-select grid (column count varies)
   desktopGridClass: string;
   onResetAll: () => void;
-  onRemoveFilter: (key: string, value: string) => void;
+  onRemoveFilter: (key: K, value: string) => void;
   // Scope inserted into data-testids ("" for results, "impl-" for implementations)
   idScope: string;
 }
@@ -61,7 +61,7 @@ interface FilterPanelProps {
  * @param onRemoveFilter - Removes a single selected value from a dimension.
  * @param idScope - Prefix inserted into data-testids to keep both screens unique.
  */
-export function FilterPanel({
+export function FilterPanel<K extends string = string>({
   title,
   drawerDescription,
   searchPlaceholder,
@@ -72,7 +72,7 @@ export function FilterPanel({
   onResetAll,
   onRemoveFilter,
   idScope,
-}: Readonly<FilterPanelProps>) {
+}: Readonly<FilterPanelProps<K>>) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const totalActive =

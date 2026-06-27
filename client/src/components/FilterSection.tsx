@@ -37,7 +37,7 @@ export function FilterSection({ filters, onChange, availableOptions }: FilterSec
     onChange({ ...filters, [key]: value });
   };
 
-  const dimensions: FilterPanelDimension[] = [
+  const dimensions: FilterPanelDimension<DimensionKey>[] = [
     {
       key: "companies",
       selectLabel: "Company",
@@ -105,7 +105,7 @@ export function FilterSection({ filters, onChange, availableOptions }: FilterSec
         })
       }
       onRemoveFilter={(key, value) =>
-        update(key as DimensionKey, filters[key as DimensionKey].filter((v) => v !== value))
+        update(key, filters[key].filter((v) => v !== value))
       }
       idScope=""
     />
