@@ -2,9 +2,16 @@ import { useMemo, useState } from "react";
 
 export type SortOrder = "asc" | "desc" | null;
 
-// Shared column-sort state used by both result tables. Clicking a column cycles
-// through ascending -> descending -> unsorted, and switching columns starts at
-// ascending. Sorting is a locale-aware string comparison of the selected field.
+/**
+ * Shared column-sort state used by both result tables. Clicking a column cycles
+ * through ascending -> descending -> unsorted, and switching columns starts at
+ * ascending. Sorting is a locale-aware string comparison of the selected field.
+ *
+ * @param results - The rows to sort.
+ * @param initialKey - The column to sort by initially (null = unsorted).
+ * @param initialOrder - The initial sort direction (null = unsorted).
+ * @returns The current `sortKey`/`sortOrder`, a `handleSort` toggler, and the `sorted` rows.
+ */
 export function useSortable<T>(
   results: T[],
   initialKey: keyof T | null = null,

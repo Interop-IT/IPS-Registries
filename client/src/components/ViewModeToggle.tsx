@@ -21,10 +21,23 @@ interface ViewModeToggleProps {
   groupingControl?: ReactNode;
 }
 
-// Shared, configurable table/cards view-mode toggle used by both the Vendor
-// Results and IPS Implementation Registry screens. The grouping control (a
-// button on one screen, a switch on the other) is supplied per screen via the
-// groupingControl slot so each screen keeps its exact appearance.
+/**
+ * Shared, configurable table/cards view-mode toggle used by both the Vendor
+ * Results and IPS Implementation Registry screens. Styling (labels, active
+ * variant, container/button classes) is parameterized per screen, and the
+ * grouping control (a button on one screen, a switch on the other) is supplied
+ * via the `groupingControl` slot so each screen keeps its exact appearance.
+ *
+ * @param viewMode - The currently selected view.
+ * @param onChange - Callback invoked with the new view when a toggle is pressed.
+ * @param tableLabel - Label for the table-view button.
+ * @param cardsLabel - Label for the cards-view button.
+ * @param labelClassName - Optional class applied to the button labels (e.g. "sm:hidden").
+ * @param activeVariant - Button variant used for the active view.
+ * @param containerClassName - Classes for the toggle-group container.
+ * @param buttonClassName - Classes applied to each toggle button.
+ * @param groupingControl - Optional per-screen grouping control rendered before the toggle.
+ */
 export function ViewModeToggle({
   viewMode,
   onChange,

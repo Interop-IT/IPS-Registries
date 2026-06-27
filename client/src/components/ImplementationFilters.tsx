@@ -17,6 +17,15 @@ interface ImplementationFiltersProps {
 
 type DimensionKey = "jurisdictions" | "approaches";
 
+/**
+ * IPS Implementation Registry filter bar. A thin adapter that maps the screen's
+ * two filter dimensions (jurisdiction, approach) and global search onto the
+ * shared {@link FilterPanel}.
+ *
+ * @param filters - Current filter selections and search query.
+ * @param onChange - Callback invoked with the next filter state.
+ * @param availableOptions - Cascading options available for each dimension.
+ */
 export function ImplementationFilters({
   filters,
   onChange,

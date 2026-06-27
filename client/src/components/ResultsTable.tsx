@@ -14,6 +14,12 @@ interface ResultsTableProps {
   results: VendorResult[];
 }
 
+/**
+ * Table view of vendor testing results with sortable columns. Sorting is driven
+ * by the shared {@link useSortable} hook and {@link SortableHeader} control.
+ *
+ * @param results - The vendor results to display.
+ */
 export function ResultsTable({ results }: ResultsTableProps) {
   const { sortKey, sortOrder, handleSort, sorted } = useSortable<VendorResult>(results);
 

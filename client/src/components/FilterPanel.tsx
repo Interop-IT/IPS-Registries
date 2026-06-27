@@ -44,9 +44,23 @@ interface FilterPanelProps {
   idScope: string;
 }
 
-// Unified filter panel (search box + multi-select filters + active-filter
-// badges, with a mobile drawer) shared by the Vendor Results and IPS
-// Implementation Registry screens.
+/**
+ * Unified filter panel (search box + multi-select filters + active-filter
+ * badges, with a mobile drawer) shared by the Vendor Results and IPS
+ * Implementation Registry screens. Each screen supplies its own dimensions,
+ * labels, grid layout, and test-id scope via props.
+ *
+ * @param title - Heading shown in the section and mobile drawer.
+ * @param drawerDescription - Description text in the mobile drawer.
+ * @param searchPlaceholder - Placeholder for the global search input.
+ * @param searchValue - Current global search text.
+ * @param onSearchChange - Callback for search input changes.
+ * @param dimensions - The multi-select filter dimensions to render.
+ * @param desktopGridClass - Tailwind classes for the desktop filter grid.
+ * @param onResetAll - Clears all filters and the search query.
+ * @param onRemoveFilter - Removes a single selected value from a dimension.
+ * @param idScope - Prefix inserted into data-testids to keep both screens unique.
+ */
 export function FilterPanel({
   title,
   drawerDescription,

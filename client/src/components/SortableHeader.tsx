@@ -11,7 +11,18 @@ interface SortableHeaderProps<T> {
   onSort: (key: keyof T) => void;
 }
 
-// Shared sortable column header button + sort-direction icon used by both tables.
+/**
+ * Shared sortable column-header control used by both result tables. Renders a
+ * button with the column label and a sort-direction icon, and exposes the
+ * current sort state to assistive tech via an accessible label.
+ *
+ * @param column - The field this header sorts.
+ * @param label - The visible column label.
+ * @param testId - data-testid for the control.
+ * @param sortKey - The currently active sort column (null = unsorted).
+ * @param sortOrder - The current sort direction.
+ * @param onSort - Callback invoked with the column when the header is activated.
+ */
 export function SortableHeader<T>({
   column,
   label,

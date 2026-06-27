@@ -25,6 +25,13 @@ interface Props {
   results: IpsImplementation[];
 }
 
+/**
+ * Renders a registry website URL as a safe external link, normalizing the
+ * scheme to https and truncating the visible label. Shows a dash when empty.
+ *
+ * @param url - The raw URL from the sheet (optional).
+ * @param testId - data-testid for the rendered link.
+ */
 function LinkCell({ url, testId }: { url?: string; testId: string }) {
   if (!url) return <span className="text-muted-foreground">-</span>;
   const trimmed = url.trim();
@@ -45,6 +52,13 @@ function LinkCell({ url, testId }: { url?: string; testId: string }) {
   );
 }
 
+/**
+ * Table view of IPS implementation registry entries with sortable columns and a
+ * contacts dialog. Defaults to sorting by jurisdiction ascending via the shared
+ * {@link useSortable} hook and {@link SortableHeader} control.
+ *
+ * @param results - The implementation registry entries to display.
+ */
 export function ImplementationsTable({ results }: Props) {
   const { sortKey, sortOrder, handleSort, sorted } = useSortable<IpsImplementation>(
     results,

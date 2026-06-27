@@ -30,10 +30,21 @@ interface UseCascadingFiltersResult<T> {
   filtered: T[];
 }
 
-// Shared cascading-filter + global-search logic used by both the Vendor Results
-// and IPS Implementation Registry screens. Each filter dimension shows only the
-// options that still exist after applying every other active filter and the
-// search query, and the filtered rows respect all dimensions plus search.
+/**
+ * Shared cascading-filter + global-search logic used by both the Vendor Results
+ * and IPS Implementation Registry screens. Each filter dimension exposes only
+ * the options that still exist after applying every OTHER active filter plus the
+ * global search, and the returned `filtered` rows respect all dimensions and the
+ * search query together.
+ *
+ * @param data - The full result set to filter (undefined while loading).
+ * @param dimensions - The filter dimensions, each with its field and selection.
+ * @param searchQuery - The current global search text.
+ * @param searchFields - Fields the global search matches against.
+ * @param searchMode - "anyField" matches within a single field; "joinedFields"
+ *   concatenates fields so a query can span across them.
+ * @returns `availableOptions` (per-dimension cascading options) and `filtered` rows.
+ */
 export function useCascadingFilters<T>({
   data,
   dimensions,

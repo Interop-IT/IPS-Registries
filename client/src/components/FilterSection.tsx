@@ -23,6 +23,15 @@ interface FilterSectionProps {
 
 type DimensionKey = "companies" | "profiles" | "actors" | "years" | "events";
 
+/**
+ * Vendor Results filter bar. A thin adapter that maps the screen's five filter
+ * dimensions (company, profile, actor, year, event) and global search onto the
+ * shared {@link FilterPanel}.
+ *
+ * @param filters - Current filter selections and search query.
+ * @param onChange - Callback invoked with the next filter state.
+ * @param availableOptions - Cascading options available for each dimension.
+ */
 export function FilterSection({ filters, onChange, availableOptions }: FilterSectionProps) {
   const update = (key: DimensionKey, value: string[]) => {
     onChange({ ...filters, [key]: value });
