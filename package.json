@@ -43,6 +43,8 @@
     "@radix-ui/react-toggle-group": "^1.1.3",
     "@radix-ui/react-tooltip": "^1.2.0",
     "@tanstack/react-query": "^5.60.5",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.2",
     "caniuse-lite": "^1.0.30001799",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -56,6 +58,7 @@
     "express-session": "^1.18.1",
     "framer-motion": "^11.13.1",
     "input-otp": "^1.4.2",
+    "jsdom": "^29.1.1",
     "lucide-react": "^0.453.0",
     "memorystore": "^1.6.7",
     "next-themes": "^0.4.6",
@@ -72,6 +75,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "^1.2.5",
     "vaul": "^1.1.2",
+    "vitest": "^4.1.9",
     "wouter": "^3.3.5",
     "ws": "^8.21.0",
     "zod": "^3.24.2",
@@ -107,13 +111,13 @@
   },
   "overrides": {
     "brace-expansion": ">=2.0.3 <3.0.0",
-    "esbuild": "$esbuild",
+    "esbuild": "^0.28.1",
     "glob": ">=10.5.0 <11.0.0",
     "@esbuild-kit/core-utils": {
-      "esbuild": "$esbuild"
+      "esbuild": "^0.28.1"
     },
     "drizzle-kit": {
-      "esbuild": "$esbuild"
+      "esbuild": "^0.28.1"
     },
     "lodash": ">=4.17.24 <5.0.0",
     "minimatch": ">=9.0.7 <10.0.0",

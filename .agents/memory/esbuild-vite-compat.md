@@ -25,9 +25,21 @@ Fix: Move hover-elevate/active-elevate/toggle-elevate CSS rules **outside** of `
 ## Override pattern for stale nested esbuild installs
 ```json
 "overrides": {
-  "esbuild": "$esbuild",
-  "@esbuild-kit/core-utils": { "esbuild": "$esbuild" },
-  "drizzle-kit": { "esbuild": "$esbuild" }
+  "esbuild": "^0.28.1",
+  "@esbuild-kit/core-utils": { "esbuild": "^0.28.1" },
+  "drizzle-kit": { "esbuild": "^0.28.1" }
 }
 ```
 When overrides are added after packages are installed, npm may leave stale nested node_modules/esbuild dirs. Fix: delete them manually, then reinstall the parent package.
+
+## `$esbuild` override breaks adding NEW packages (npm 10.8.2)
+The `"esbuild": "$esbuild"` reference form fails when installing a new dependency
+whose peer graph touches esbuild (e.g. adding `vitest`, which pulls vite 8's
+peers incl. `@vitejs/devtools`). npm aborts the ideal-tree build with
+`Unable to resolve reference $esbuild` during `#loadPeerSet`.
+**Why:** npm can't resolve the `$name` reference inside a sub-context peer set.
+**Fix:** use the literal range that EXACTLY matches the direct `esbuild`
+devDependency (`^0.28.1`). A non-matching literal (e.g. `0.28.1`) triggers
+`EOVERRIDE: Override for esbuild@^0.28.1 conflicts with direct dependency`, so it
+must match the caret range character-for-character. `^0.28.1` resolves to the
+same installed version as `$esbuild`, so dev/build behavior is unchanged.
