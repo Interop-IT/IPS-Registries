@@ -30,7 +30,7 @@ export function SortableHeader<T>({
   sortKey,
   sortOrder,
   onSort,
-}: SortableHeaderProps<T>) {
+}: Readonly<SortableHeaderProps<T>>) {
   const isActive = sortKey === column;
 
   let icon = <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />;
