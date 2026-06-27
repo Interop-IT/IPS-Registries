@@ -87,10 +87,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(results);
     } catch (error) {
       console.error("Error fetching vendor results:", error);
-      res.status(500).json({
-        error: "Failed to fetch vendor results",
-        message: error instanceof Error ? error.message : "Unknown error",
-      });
+      res.status(500).json({ error: "Failed to fetch vendor results" });
     }
   });
 
@@ -101,10 +98,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(results);
     } catch (error) {
       console.error("Error fetching IPS implementations:", error);
-      res.status(500).json({
-        error: "Failed to fetch IPS implementations",
-        message: error instanceof Error ? error.message : "Unknown error",
-      });
+      res.status(500).json({ error: "Failed to fetch IPS implementations" });
     }
   });
 

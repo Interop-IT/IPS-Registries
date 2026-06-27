@@ -1,4 +1,9 @@
-import type { VendorResult, IpsImplementation } from "@shared/schema";
+import {
+  vendorResultSchema,
+  ipsImplementationSchema,
+  type VendorResult,
+  type IpsImplementation,
+} from "@shared/schema";
 
 // Extract sheet ID from Google Sheets URL
 function extractSheetId(url: string): string {
@@ -186,6 +191,7 @@ async function _fetchVendorResults(): Promise<VendorResult[]> {
   const columnMap = buildColumnMap(headers);
 
   const results: VendorResult[] = [];
+  let skipped = 0;
   for (let i = 1; i < rows.length; i++) {
     const values = rows[i];
     if (!values.some((v) => v && v.trim())) continue;
@@ -219,9 +225,18 @@ async function _fetchVendorResults(): Promise<VendorResult[]> {
         "phone",
       ]),
     };
-    if (result.company) results.push(result);
+    if (!result.company) continue;
+    const parsed = vendorResultSchema.safeParse(result);
+    if (!parsed.success) {
+      skipped++;
+      continue;
+    }
+    results.push(parsed.data);
   }
 
+  if (skipped > 0) {
+    console.warn(`Skipped ${skipped} invalid vendor result row(s) that failed schema validation`);
+  }
   console.log(`Successfully fetched ${results.length} vendor results`);
   return results;
 }
@@ -255,6 +270,7 @@ async function _fetchIpsImplementations(): Promise<IpsImplementation[]> {
   const columnMap = buildColumnMap(headers);
 
   const results: IpsImplementation[] = [];
+  let skipped = 0;
   for (let i = headerIdx + 1; i < rows.length; i++) {
     const values = rows[i];
     if (!values.some((v) => v && v.trim())) continue;
@@ -292,9 +308,18 @@ async function _fetchIpsImplementations(): Promise<IpsImplementation[]> {
       ]),
     };
 
-    if (implementation.jurisdiction) results.push(implementation);
+    if (!implementation.jurisdiction) continue;
+    const parsed = ipsImplementationSchema.safeParse(implementation);
+    if (!parsed.success) {
+      skipped++;
+      continue;
+    }
+    results.push(parsed.data);
   }
 
+  if (skipped > 0) {
+    console.warn(`Skipped ${skipped} invalid IPS implementation row(s) that failed schema validation`);
+  }
   console.log(`Successfully fetched ${results.length} IPS implementations`);
   return results;
 }
