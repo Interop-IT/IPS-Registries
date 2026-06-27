@@ -1,14 +1,21 @@
 import type { VendorResult } from "@shared/schema";
 import { ResultsTable } from "./ResultsTable";
 import { ResultsCards } from "./ResultsCards";
+import { ViewModeToggle } from "./ViewModeToggle";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { LayoutGrid, Table, Users } from "lucide-react";
+import { Users } from "lucide-react";
 
 interface ResultsSectionProps {
   results: VendorResult[];
 }
 
+/**
+ * Vendor Results section that toggles between table and card views and offers a
+ * group-by-company option for the card view.
+ *
+ * @param results - The vendor results to display.
+ */
 export function ResultsSection({ results }: ResultsSectionProps) {
   const [viewMode, setViewMode] = useState<"table" | "cards">("table");
   const [groupByCompany, setGroupByCompany] = useState(false);
@@ -28,42 +35,31 @@ export function ResultsSection({ results }: ResultsSectionProps) {
             </div>
             
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-              {viewMode === "cards" && (
-                <Button
-                  variant={groupByCompany ? "secondary" : "outline"}
-                  size="sm"
-                  onClick={() => setGroupByCompany(!groupByCompany)}
-                  data-testid="button-group-by-company"
-                  className="w-full gap-2 min-h-[44px] sm:w-auto sm:min-h-0"
-                >
-                  <Users className="h-4 w-4" />
-                  <span className="sm:hidden">Group by Company</span>
-                  <span className="hidden sm:inline">Group by Company</span>
-                </Button>
-              )}
-              
-              <div className="flex gap-1 rounded-lg border p-1">
-                <Button
-                  variant={viewMode === "table" ? "secondary" : "ghost"}
-                  size="sm"
-                  onClick={() => setViewMode("table")}
-                  data-testid="button-view-table"
-                  className="flex-1 gap-2 min-h-[44px] sm:flex-none sm:min-h-0"
-                >
-                  <Table className="h-4 w-4" />
-                  <span className="sm:hidden">Table</span>
-                </Button>
-                <Button
-                  variant={viewMode === "cards" ? "secondary" : "ghost"}
-                  size="sm"
-                  onClick={() => setViewMode("cards")}
-                  data-testid="button-view-cards"
-                  className="flex-1 gap-2 min-h-[44px] sm:flex-none sm:min-h-0"
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                  <span className="sm:hidden">Cards</span>
-                </Button>
-              </div>
+              <ViewModeToggle
+                viewMode={viewMode}
+                onChange={setViewMode}
+                tableLabel="Table"
+                cardsLabel="Cards"
+                labelClassName="sm:hidden"
+                activeVariant="secondary"
+                containerClassName="flex gap-1 rounded-lg border p-1"
+                buttonClassName="flex-1 gap-2 min-h-[44px] sm:flex-none sm:min-h-0"
+                groupingControl={
+                  viewMode === "cards" ? (
+                    <Button
+                      variant={groupByCompany ? "secondary" : "outline"}
+                      size="sm"
+                      onClick={() => setGroupByCompany(!groupByCompany)}
+                      data-testid="button-group-by-company"
+                      className="w-full gap-2 min-h-[44px] sm:w-auto sm:min-h-0"
+                    >
+                      <Users className="h-4 w-4" />
+                      <span className="sm:hidden">Group by Company</span>
+                      <span className="hidden sm:inline">Group by Company</span>
+                    </Button>
+                  ) : null
+                }
+              />
             </div>
           </div>
 

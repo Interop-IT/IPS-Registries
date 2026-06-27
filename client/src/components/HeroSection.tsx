@@ -6,6 +6,13 @@ interface HeroSectionProps {
   latestEvent: string;
 }
 
+/**
+ * Hero banner for the Vendor Results screen summarizing headline registry stats.
+ *
+ * @param totalVendors - Distinct vendor count to display.
+ * @param totalResults - Total testing-result count to display.
+ * @param latestEvent - Name of the most recent testing event.
+ */
 export function HeroSection({ totalVendors, totalResults, latestEvent }: HeroSectionProps) {
   return (
     <section className="bg-gradient-to-b from-primary/5 to-background py-8 md:py-12">

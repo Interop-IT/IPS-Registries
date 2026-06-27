@@ -7,6 +7,10 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Implementations from "@/pages/Implementations";
 
+/**
+ * Client-side route table. Maps the registry routes (`/`, `/implementations`,
+ * `/results`) to their pages and falls back to the not-found page.
+ */
 function Router() {
   return (
     <Switch>
@@ -18,6 +22,10 @@ function Router() {
   );
 }
 
+/**
+ * Application root. Provides the React Query client and tooltip context, mounts
+ * the global toaster, and renders the router.
+ */
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

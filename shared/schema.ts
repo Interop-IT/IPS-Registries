@@ -31,11 +31,11 @@ export interface VendorResult {
 }
 
 export const vendorResultSchema = z.object({
-  company: z.string(),
-  profile: z.string(),
-  actor: z.string(),
-  year: z.string(),
-  event: z.string(),
+  company: z.string().trim().min(1),
+  profile: z.string().trim().min(1),
+  actor: z.string().trim().min(1),
+  year: z.string().trim().min(1),
+  event: z.string().trim().min(1),
   website: z.string().optional(),
   product: z.string().optional(),
   primaryContact: z.string().optional(),
@@ -52,23 +52,26 @@ export interface IpsImplementation {
   contactEmail?: string;
   infoWebsite?: string;
   approach?: string;
-  dataDomainsLink?: string;
 }
 
 export const ipsImplementationSchema = z.object({
-  jurisdiction: z.string(),
+  jurisdiction: z.string().trim().min(1),
   projectName: z.string().optional(),
   primaryContact: z.string().optional(),
   contactEmail: z.string().optional(),
   infoWebsite: z.string().optional(),
   approach: z.string().optional(),
-  dataDomainsLink: z.string().optional(),
 });
 
 export type InsertIpsImplementation = z.infer<typeof ipsImplementationSchema>;
 
-// Helper: split a contact / email field that may contain newlines, semicolons,
-// commas, or bullet-dash prefixes ("- name"). Returns trimmed unique values.
+/**
+ * Splits a contact or email field that may contain newlines, semicolons, commas,
+ * or bullet-dash prefixes ("- name") into trimmed, de-duplicated values.
+ *
+ * @param raw - The raw contact/email string from the sheet (optional).
+ * @returns The unique, trimmed individual values.
+ */
 export function splitContactList(raw?: string): string[] {
   if (!raw) return [];
   const parts = raw
@@ -78,9 +81,15 @@ export function splitContactList(raw?: string): string[] {
   return Array.from(new Set(parts));
 }
 
-// Distinct contact "people" count for an implementation. We treat a
-// paired primary-contact name + email as a single person, so the count
-// is the larger of the two split lists (handles 0/1/many on either side).
+/**
+ * Counts distinct contact "people" for an implementation. A paired name + email
+ * is treated as one person, so the result is the larger of the two split lists
+ * (handles 0/1/many on either side).
+ *
+ * @param primaryContact - Raw contact-name string (optional).
+ * @param contactEmail - Raw contact-email string (optional).
+ * @returns The distinct contact count.
+ */
 export function distinctContactCount(
   primaryContact?: string,
   contactEmail?: string,
@@ -166,8 +175,13 @@ const COUNTRY_TO_CONTINENT: Record<string, Continent> = {
   "new zealand": "Oceania",
 };
 
-// Resolve a jurisdiction string to its continent, falling back to "Other"
-// for unrecognized values (e.g. organizations like "WHO").
+/**
+ * Resolves a jurisdiction string to its continent, falling back to "Other" for
+ * unrecognized values (e.g. organizations like "WHO").
+ *
+ * @param jurisdiction - The jurisdiction name from the sheet.
+ * @returns The matching continent, or "Other".
+ */
 export function continentForJurisdiction(jurisdiction: string): Continent {
   const key = jurisdiction.trim().toLowerCase();
   return COUNTRY_TO_CONTINENT[key] ?? "Other";

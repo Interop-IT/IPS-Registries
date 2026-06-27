@@ -1,0 +1,93 @@
+Verify each finding against current code. Fix only still-valid issues, skip the
+rest with a brief reason, keep changes minimal, and validate.
+
+Inline comments:
+In @.agents/memory/esbuild-vite-compat.md:
+- Around line 35-45: The package version guidance is inconsistent: the “Required
+package versions” bullet still tells readers to use the $esbuild reference even
+though the override section now requires the literal ^0.28.1. Update the earlier
+version bullet in .agents/memory/esbuild-vite-compat.md so it matches the new
+esbuild override wording, and keep the terminology aligned with the existing
+esbuild/devDependency guidance throughout the document.
+
+In `@client/src/components/FilterPanel.tsx`:
+- Around line 184-190: The icon-only remove button in FilterPanel lacks an
+accessible name, so update the button rendered in the filter removal UI to
+expose the filter name to assistive tech. Use the existing onRemoveFilter
+handler and item value to add an appropriate accessible label on the button
+itself, keeping the X icon purely decorative so screen readers can identify
+which active filter will be removed.
+
+In `@client/src/components/SortableHeader.tsx`:
+- Around line 15-41: The SortableHeader component only changes the icon
+visually, so the active sort state is not exposed to assistive tech; update
+SortableHeader and its props so consumers can provide or derive an accessible
+sort state, and apply it via an appropriate aria-sort or equivalent state label
+on the sortable control or enclosing header cell. Keep the behavior tied to the
+existing SortableHeader, SortableHeaderProps, and onSort flow so both tables can
+announce ascending, descending, or unsorted state programmatically instead of
+relying on icons alone.
+
+In `@client/src/components/ViewModeToggle.tsx`:
+- Around line 43-62: The ViewModeToggle buttons only indicate the active state
+through visual styling, so screen readers cannot tell which view is selected.
+Update the Button elements in ViewModeToggle to expose the current state
+semantically by adding aria-pressed (or converting the pair to an appropriate
+toggle-group pattern) based on viewMode in the onClick/onChange controls for
+"table" and "cards". Keep the existing labels and test ids, but make the
+selected mode programmatically discernible.
+
+In `@client/src/hooks/useSortable.ts`:
+- Around line 35-39: The shared comparator in useSortable should use
+locale-aware string comparison instead of raw < and > so user-facing sorting
+handles accents and case variants correctly. Update the sorter inside
+useSortable to compare aVal and bVal with a locale-aware API, and keep the
+fallback narrow by using nullish handling rather than the broader || "" default.
+Reference the useSortable hook and its sort callback to locate the change.
+
+In `@server/googleSheets.ts`:
+- Around line 228-234: The row validation in vendor parsing still allows blank
+required CSV fields because `z.string()` accepts empty strings, so rows can pass
+`vendorResultSchema.safeParse` with empty `company` or `jurisdiction` values.
+Update the parsing path in `server/googleSheets.ts` around the
+`results.push(parsed.data)` flow to reject rows with any empty required field
+before calling `safeParse`, or tighten the shared schemas used by
+`vendorResultSchema` and related validators to use non-empty trimmed strings.
+Ensure the fix applies consistently to the existing `result`/`parsed` handling
+so malformed CSV rows are skipped.
+
+In `@vitest.config.ts`:
+- Around line 9-11: The alias setup in the Vitest config relies on
+import.meta.dirname, which may not exist on older Node 20 runtimes used by
+.replit. Update the path resolution in the vitest config to derive the base
+directory from import.meta.url using fileURLToPath(new URL(".",
+import.meta.url)) and use that base for the "@", "`@shared`", and "`@assets`"
+aliases so the config works consistently across supported Node versions.
+
+---
+
+Nitpick comments:
+In `@client/src/components/FilterPanel.tsx`:
+- Around line 18-29: Make FilterPanel preserve the concrete filter key type
+instead of widening it to string: update FilterPanelDimension and the
+FilterPanel component to be generic over the key union so onRemoveFilter and
+related callbacks carry the same key type end-to-end. Then thread that generic
+through the callers in FilterSection and ImplementationFilters so they no longer
+need casts back to DimensionKey, keeping the filter callbacks type-safe.
+
+In `@package.json`:
+- Around line 46-47: Move the test-only packages out of dependencies and into
+devDependencies in package.json. Specifically, relocate the `@testing-library/`*
+entries along with jsdom and vitest so the runtime dependency list only contains
+production packages; keep the test stack grouped under devDependencies to match
+their usage.
+
+In `@tests/e2e/filter-search-sort.md`:
+- Around line 11-14: The end-to-end test plan still hard-codes live-sheet values
+and fixed row expectations, which will become flaky as the Google Sheets data
+changes. Update the test plan in the filter/search/sort scenario to capture a
+currently visible company and jurisdiction at runtime, then use those dynamic
+values for search/filter assertions in the relevant steps instead of fixed names
+like the ones currently referenced. Keep the checks relative by verifying the
+result set and option lists narrow after each action, and apply the same dynamic
+approach throughout the plan sections that currently depend on exact content.

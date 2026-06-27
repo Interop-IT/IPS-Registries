@@ -18,6 +18,16 @@ interface MultiSelectFilterProps {
   placeholder?: string;
 }
 
+/**
+ * A popover multi-select with search-within-dropdown and selected-count badge,
+ * used for each filter dimension on both registry screens.
+ *
+ * @param label - Field label shown on the trigger.
+ * @param options - All selectable option values.
+ * @param selected - Currently selected values.
+ * @param onChange - Callback invoked with the next selection.
+ * @param placeholder - Trigger placeholder shown when nothing is selected.
+ */
 export function MultiSelectFilter({
   label,
   options,

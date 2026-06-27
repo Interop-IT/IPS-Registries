@@ -8,12 +8,21 @@ import {
 } from "@/components/ImplementationFilters";
 import { ImplementationsTable } from "@/components/ImplementationsTable";
 import { ImplementationsCards } from "@/components/ImplementationsCards";
+import { ViewModeToggle } from "@/components/ViewModeToggle";
 import type { IpsImplementation } from "@shared/schema";
-import { Loader2, Table as TableIcon, LayoutGrid } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import {
+  useCascadingFilters,
+  type CascadingDimension,
+} from "@/hooks/useCascadingFilters";
 
+/**
+ * IPS Implementation Registry page (`/` and `/implementations`). Fetches registry
+ * entries, applies cascading filters and cross-field search, and renders the
+ * filters plus the table/card view with optional grouping by continent.
+ */
 export default function Implementations() {
   const [filters, setFilters] = useState<ImplementationFilterState>({
     jurisdictions: [],
@@ -27,77 +36,28 @@ export default function Implementations() {
     queryKey: ["/api/implementations"],
   });
 
-  const availableOptions = useMemo(() => {
-    if (!data) return { jurisdictions: [], approaches: [] };
+  const dimensions = useMemo<CascadingDimension<IpsImplementation>[]>(
+    () => [
+      { key: "jurisdictions", field: "jurisdiction", selected: filters.jurisdictions },
+      { key: "approaches", field: "approach", selected: filters.approaches },
+    ],
+    [filters],
+  );
 
-    const getFiltered = (exclude: "jurisdictions" | "approaches") =>
-      data.filter((row) => {
-        if (
-          exclude !== "jurisdictions" &&
-          filters.jurisdictions.length > 0 &&
-          !filters.jurisdictions.includes(row.jurisdiction)
-        )
-          return false;
-        if (
-          exclude !== "approaches" &&
-          filters.approaches.length > 0 &&
-          !filters.approaches.includes(row.approach || "")
-        )
-          return false;
-        if (filters.searchQuery) {
-          const q = filters.searchQuery.toLowerCase();
-          const hay = [
-            row.jurisdiction,
-            row.projectName,
-            row.primaryContact,
-            row.contactEmail,
-            row.infoWebsite,
-            row.approach,
-            row.dataDomainsLink,
-          ]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase();
-          if (!hay.includes(q)) return false;
-        }
-        return true;
-      });
-
-    const uniq = (rows: IpsImplementation[], key: keyof IpsImplementation) =>
-      Array.from(new Set(rows.map((r) => r[key]).filter((v): v is string => Boolean(v)))).sort();
-
-    return {
-      jurisdictions: uniq(getFiltered("jurisdictions"), "jurisdiction"),
-      approaches: uniq(getFiltered("approaches"), "approach"),
-    };
-  }, [data, filters]);
-
-  const filtered = useMemo(() => {
-    if (!data) return [];
-    return data.filter((row) => {
-      if (filters.jurisdictions.length > 0 && !filters.jurisdictions.includes(row.jurisdiction))
-        return false;
-      if (filters.approaches.length > 0 && !filters.approaches.includes(row.approach || ""))
-        return false;
-      if (filters.searchQuery) {
-        const q = filters.searchQuery.toLowerCase();
-        const hay = [
-          row.jurisdiction,
-          row.projectName,
-          row.primaryContact,
-          row.contactEmail,
-          row.infoWebsite,
-          row.approach,
-          row.dataDomainsLink,
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
-      return true;
-    });
-  }, [data, filters]);
+  const { availableOptions, filtered } = useCascadingFilters<IpsImplementation>({
+    data,
+    dimensions,
+    searchQuery: filters.searchQuery,
+    searchFields: [
+      "jurisdiction",
+      "projectName",
+      "primaryContact",
+      "contactEmail",
+      "infoWebsite",
+      "approach",
+    ],
+    searchMode: "joinedFields",
+  });
 
   if (isLoading) {
     return (
@@ -162,7 +122,10 @@ export default function Implementations() {
         <ImplementationFilters
           filters={filters}
           onChange={setFilters}
-          availableOptions={availableOptions}
+          availableOptions={{
+            jurisdictions: availableOptions.jurisdictions ?? [],
+            approaches: availableOptions.approaches ?? [],
+          }}
         />
 
         <section className="container px-4 py-6 md:px-6 md:py-8">
@@ -172,41 +135,30 @@ export default function Implementations() {
                 Showing {filtered.length} of {data?.length ?? 0} implementations
               </p>
               <div className="flex flex-wrap items-center gap-3">
-                {viewMode === "cards" && (
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      id="group-continent"
-                      checked={groupByContinent}
-                      onCheckedChange={setGroupByContinent}
-                      data-testid="switch-group-continent"
-                    />
-                    <Label htmlFor="group-continent" className="text-sm cursor-pointer">
-                      Group by Continent
-                    </Label>
-                  </div>
-                )}
-                <div className="flex gap-1 rounded-md border p-1">
-                  <Button
-                    variant={viewMode === "table" ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setViewMode("table")}
-                    className="gap-1.5 min-h-[44px] sm:min-h-0"
-                    data-testid="button-view-table"
-                  >
-                    <TableIcon className="h-4 w-4" />
-                    <span>List View</span>
-                  </Button>
-                  <Button
-                    variant={viewMode === "cards" ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setViewMode("cards")}
-                    className="gap-1.5 min-h-[44px] sm:min-h-0"
-                    data-testid="button-view-cards"
-                  >
-                    <LayoutGrid className="h-4 w-4" />
-                    <span>Item View</span>
-                  </Button>
-                </div>
+                <ViewModeToggle
+                  viewMode={viewMode}
+                  onChange={setViewMode}
+                  tableLabel="List View"
+                  cardsLabel="Item View"
+                  activeVariant="default"
+                  containerClassName="flex gap-1 rounded-md border p-1"
+                  buttonClassName="gap-1.5 min-h-[44px] sm:min-h-0"
+                  groupingControl={
+                    viewMode === "cards" ? (
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          id="group-continent"
+                          checked={groupByContinent}
+                          onCheckedChange={setGroupByContinent}
+                          data-testid="switch-group-continent"
+                        />
+                        <Label htmlFor="group-continent" className="text-sm cursor-pointer">
+                          Group by Continent
+                        </Label>
+                      </div>
+                    ) : null
+                  }
+                />
               </div>
             </div>
 

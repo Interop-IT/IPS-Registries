@@ -1,6 +1,10 @@
 import { ExternalLink } from "lucide-react";
 import interopLogo from "@assets/Interop-PNG-ImageTransparent_1781710478896.webp";
 
+/**
+ * Site footer with Interop-IT branding and related external links, shared across
+ * all pages.
+ */
 export function Footer() {
   return (
     <footer className="border-t bg-card py-6 md:py-8">

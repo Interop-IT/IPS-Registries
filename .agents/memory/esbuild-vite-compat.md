@@ -15,7 +15,7 @@ esbuild 0.28.x has a regression where it cannot transform destructuring for the 
 - `@tailwindcss/vite@^4.3.1` (vite 8 compatible: `^5.2.0 || ^6 || ^7 || ^8`)
 - `@types/node@^20.19.0` (vite 8 peer dep: `^20.19.0 || >=22.12.0`)
 - `esbuild@^0.28.1` in devDependencies (the non-vulnerable version)
-- Global override: `"esbuild": "$esbuild"` in package.json overrides
+- Global override: `"esbuild": "^0.28.1"` in package.json overrides — use the literal range that EXACTLY matches the direct `esbuild` devDependency, NOT the `$esbuild` reference form (see `$esbuild` section below for why)
 
 ## CSS fix required for vite 8 / lightningcss
 Vite 8 switched from cssnano to lightningcss for CSS minification. lightningcss rejects invalid chained pseudo-element selectors (`::after::after`, `::after::before`) that Tailwind JIT generates when `after:*` utilities are used in HTML AND custom classes with `::after`/`::before` are defined in `@layer utilities`.
@@ -25,9 +25,21 @@ Fix: Move hover-elevate/active-elevate/toggle-elevate CSS rules **outside** of `
 ## Override pattern for stale nested esbuild installs
 ```json
 "overrides": {
-  "esbuild": "$esbuild",
-  "@esbuild-kit/core-utils": { "esbuild": "$esbuild" },
-  "drizzle-kit": { "esbuild": "$esbuild" }
+  "esbuild": "^0.28.1",
+  "@esbuild-kit/core-utils": { "esbuild": "^0.28.1" },
+  "drizzle-kit": { "esbuild": "^0.28.1" }
 }
 ```
 When overrides are added after packages are installed, npm may leave stale nested node_modules/esbuild dirs. Fix: delete them manually, then reinstall the parent package.
+
+## `$esbuild` override breaks adding NEW packages (npm 10.8.2)
+The `"esbuild": "$esbuild"` reference form fails when installing a new dependency
+whose peer graph touches esbuild (e.g. adding `vitest`, which pulls vite 8's
+peers incl. `@vitejs/devtools`). npm aborts the ideal-tree build with
+`Unable to resolve reference $esbuild` during `#loadPeerSet`.
+**Why:** npm can't resolve the `$name` reference inside a sub-context peer set.
+**Fix:** use the literal range that EXACTLY matches the direct `esbuild`
+devDependency (`^0.28.1`). A non-matching literal (e.g. `0.28.1`) triggers
+`EOVERRIDE: Override for esbuild@^0.28.1 conflicts with direct dependency`, so it
+must match the caret range character-for-character. `^0.28.1` resolves to the
+same installed version as `$esbuild`, so dev/build behavior is unchanged.

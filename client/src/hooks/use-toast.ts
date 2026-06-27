@@ -24,6 +24,11 @@ const actionTypes = {
 
 let count = 0
 
+/**
+ * Generates a process-unique, incrementing string id for a toast.
+ *
+ * @returns The next toast id.
+ */
 function genId() {
   count = (count + 1) % Number.MAX_SAFE_INTEGER
   return count.toString()
@@ -55,6 +60,12 @@ interface State {
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
+/**
+ * Schedules a dismissed toast for removal after the configured delay, ensuring a
+ * given toast is only queued once.
+ *
+ * @param toastId - Id of the toast to remove.
+ */
 const addToRemoveQueue = (toastId: string) => {
   if (toastTimeouts.has(toastId)) {
     return
@@ -71,6 +82,14 @@ const addToRemoveQueue = (toastId: string) => {
   toastTimeouts.set(toastId, timeout)
 }
 
+/**
+ * Pure reducer for toast state, handling add, update, dismiss, and remove
+ * actions (dismiss also queues delayed removal as a side effect).
+ *
+ * @param state - Current toast state.
+ * @param action - The action to apply.
+ * @returns The next toast state.
+ */
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "ADD_TOAST":
@@ -130,6 +149,11 @@ const listeners: Array<(state: State) => void> = []
 
 let memoryState: State = { toasts: [] }
 
+/**
+ * Applies an action to the module-level toast state and notifies all subscribers.
+ *
+ * @param action - The action to dispatch.
+ */
 function dispatch(action: Action) {
   memoryState = reducer(memoryState, action)
   listeners.forEach((listener) => {
@@ -139,6 +163,12 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">
 
+/**
+ * Imperatively shows a toast, returning handles to update or dismiss it.
+ *
+ * @param props - Toast content/options (id is generated automatically).
+ * @returns The toast id plus `dismiss` and `update` functions.
+ */
 function toast({ ...props }: Toast) {
   const id = genId()
 
@@ -168,6 +198,12 @@ function toast({ ...props }: Toast) {
   }
 }
 
+/**
+ * React hook that subscribes to the shared toast state and exposes the `toast`
+ * and `dismiss` helpers.
+ *
+ * @returns Current toasts plus `toast` and `dismiss` functions.
+ */
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState)
 
