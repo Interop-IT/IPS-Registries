@@ -1,6 +1,5 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
 import { fetchVendorResults, fetchIpsImplementations } from "./googleSheets";
 
 const DEFAULT_IPS_RETURN_URL =
@@ -36,7 +35,7 @@ function createRateLimiter(maxRequests: number, windowMs: number) {
   // Periodically prune stale entries to avoid unbounded memory growth
   setInterval(() => {
     const now = Date.now();
-    for (const [key, entry] of store) {
+    for (const [key, entry] of Array.from(store.entries())) {
       if (now - entry.windowStart >= windowMs) {
         store.delete(key);
       }
