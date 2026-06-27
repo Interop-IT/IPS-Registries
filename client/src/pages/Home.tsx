@@ -7,6 +7,10 @@ import { ResultsSection } from "@/components/ResultsSection";
 import { Footer } from "@/components/Footer";
 import type { VendorResult } from "@shared/schema";
 import { Loader2 } from "lucide-react";
+import {
+  useCascadingFilters,
+  type CascadingDimension,
+} from "@/hooks/useCascadingFilters";
 
 export default function Home() {
   const [filters, setFilters] = useState<FilterState>({
@@ -23,132 +27,35 @@ export default function Home() {
     queryKey: ['/api/vendor-results'],
   });
 
-  // Get available options with cascading logic - each filter shows only options
-  // that exist in the dataset after applying all OTHER filters
-  const availableOptions = useMemo(() => {
-    if (!vendorResults) {
-      return {
-        companies: [],
-        profiles: [],
-        actors: [],
-        years: [],
-        events: [],
-      };
-    }
+  // Cascading filters + global search are handled by a shared hook. Each filter
+  // shows only options that still exist after applying all OTHER filters.
+  const dimensions = useMemo<CascadingDimension<VendorResult>[]>(
+    () => [
+      { key: "companies", field: "company", selected: filters.companies },
+      { key: "profiles", field: "profile", selected: filters.profiles },
+      { key: "actors", field: "actor", selected: filters.actors },
+      { key: "years", field: "year", selected: filters.years },
+      { key: "events", field: "event", selected: filters.events },
+    ],
+    [filters],
+  );
 
-    // Helper function to filter results excluding a specific filter type
-    const getFilteredResults = (excludeFilter: 'companies' | 'profiles' | 'actors' | 'years' | 'events') => {
-      return vendorResults.filter(result => {
-        // Apply all filters except the excluded one
-        if (excludeFilter !== 'companies' && filters.companies.length > 0 && !filters.companies.includes(result.company)) {
-          return false;
-        }
-        if (excludeFilter !== 'profiles' && filters.profiles.length > 0 && !filters.profiles.includes(result.profile)) {
-          return false;
-        }
-        if (excludeFilter !== 'actors' && filters.actors.length > 0 && !filters.actors.includes(result.actor)) {
-          return false;
-        }
-        if (excludeFilter !== 'years' && filters.years.length > 0 && !filters.years.includes(result.year)) {
-          return false;
-        }
-        if (excludeFilter !== 'events' && filters.events.length > 0 && !filters.events.includes(result.event)) {
-          return false;
-        }
-
-        // Apply text search
-        if (filters.searchQuery) {
-          const searchLower = filters.searchQuery.toLowerCase();
-          const searchableFields = [
-            result.company,
-            result.profile,
-            result.actor,
-            result.year,
-            result.event,
-            result.website || '',
-            result.product || '',
-            result.primaryContact || '',
-            result.contactInfo || '',
-          ];
-          
-          const matchesSearch = searchableFields.some(field => 
-            field.toLowerCase().includes(searchLower)
-          );
-          
-          if (!matchesSearch) {
-            return false;
-          }
-        }
-
-        return true;
-      });
-    };
-
-    const getUniqueValues = (results: VendorResult[], key: keyof VendorResult): string[] => {
-      const values = results
-        .map(r => r[key])
-        .filter((value): value is string => Boolean(value));
-      return Array.from(new Set(values)).sort();
-    };
-
-    return {
-      companies: getUniqueValues(getFilteredResults('companies'), 'company'),
-      profiles: getUniqueValues(getFilteredResults('profiles'), 'profile'),
-      actors: getUniqueValues(getFilteredResults('actors'), 'actor'),
-      years: getUniqueValues(getFilteredResults('years'), 'year'),
-      events: getUniqueValues(getFilteredResults('events'), 'event'),
-    };
-  }, [vendorResults, filters]);
-
-  // Filter results based on selected filters and search query
-  const filteredResults = useMemo(() => {
-    if (!vendorResults) return [];
-
-    return vendorResults.filter(result => {
-      // Apply multi-select filters
-      if (filters.companies.length > 0 && !filters.companies.includes(result.company)) {
-        return false;
-      }
-      if (filters.profiles.length > 0 && !filters.profiles.includes(result.profile)) {
-        return false;
-      }
-      if (filters.actors.length > 0 && !filters.actors.includes(result.actor)) {
-        return false;
-      }
-      if (filters.years.length > 0 && !filters.years.includes(result.year)) {
-        return false;
-      }
-      if (filters.events.length > 0 && !filters.events.includes(result.event)) {
-        return false;
-      }
-
-      // Apply text search across all fields
-      if (filters.searchQuery) {
-        const searchLower = filters.searchQuery.toLowerCase();
-        const searchableFields = [
-          result.company,
-          result.profile,
-          result.actor,
-          result.year,
-          result.event,
-          result.website || '',
-          result.product || '',
-          result.primaryContact || '',
-          result.contactInfo || '',
-        ];
-        
-        const matchesSearch = searchableFields.some(field => 
-          field.toLowerCase().includes(searchLower)
-        );
-        
-        if (!matchesSearch) {
-          return false;
-        }
-      }
-
-      return true;
-    });
-  }, [filters, vendorResults]);
+  const { availableOptions, filtered: filteredResults } = useCascadingFilters<VendorResult>({
+    data: vendorResults,
+    dimensions,
+    searchQuery: filters.searchQuery,
+    searchFields: [
+      "company",
+      "profile",
+      "actor",
+      "year",
+      "event",
+      "website",
+      "product",
+      "primaryContact",
+      "contactInfo",
+    ],
+  });
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -219,7 +126,13 @@ export default function Home() {
         <FilterSection
           filters={filters}
           onChange={setFilters}
-          availableOptions={availableOptions}
+          availableOptions={{
+            companies: availableOptions.companies ?? [],
+            profiles: availableOptions.profiles ?? [],
+            actors: availableOptions.actors ?? [],
+            years: availableOptions.years ?? [],
+            events: availableOptions.events ?? [],
+          }}
         />
         <ResultsSection results={filteredResults} />
       </main>

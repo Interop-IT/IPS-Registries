@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { IpsImplementation } from "@shared/schema";
 import { distinctContactCount } from "@shared/schema";
-import { ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Users } from "lucide-react";
+import { ExternalLink, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -18,9 +18,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ContactPanel } from "./ContactPanel";
-
-type SortKey = keyof IpsImplementation;
-type SortOrder = "asc" | "desc" | null;
+import { useSortable } from "@/hooks/useSortable";
+import { SortableHeader } from "./SortableHeader";
 
 interface Props {
   results: IpsImplementation[];
@@ -47,49 +46,12 @@ function LinkCell({ url, testId }: { url?: string; testId: string }) {
 }
 
 export function ImplementationsTable({ results }: Props) {
-  const [sortKey, setSortKey] = useState<SortKey | null>("jurisdiction");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
-  const [selected, setSelected] = useState<IpsImplementation | null>(null);
-
-  const handleSort = (key: SortKey) => {
-    if (sortKey === key) {
-      if (sortOrder === "asc") setSortOrder("desc");
-      else if (sortOrder === "desc") {
-        setSortKey(null);
-        setSortOrder(null);
-      } else setSortOrder("asc");
-    } else {
-      setSortKey(key);
-      setSortOrder("asc");
-    }
-  };
-
-  const sorted = [...results].sort((a, b) => {
-    if (!sortKey || !sortOrder) return 0;
-    const aVal = (a[sortKey] || "") as string;
-    const bVal = (b[sortKey] || "") as string;
-    if (aVal < bVal) return sortOrder === "asc" ? -1 : 1;
-    if (aVal > bVal) return sortOrder === "asc" ? 1 : -1;
-    return 0;
-  });
-
-  const SortIcon = ({ column }: { column: SortKey }) => {
-    if (sortKey !== column) return <ArrowUpDown className="ml-2 h-4 w-4" />;
-    if (sortOrder === "asc") return <ArrowUp className="ml-2 h-4 w-4" />;
-    return <ArrowDown className="ml-2 h-4 w-4" />;
-  };
-
-  const SortBtn = ({ column, label, testId }: { column: SortKey; label: string; testId: string }) => (
-    <Button
-      variant="ghost"
-      onClick={() => handleSort(column)}
-      className="h-auto p-0 font-semibold hover:bg-transparent"
-      data-testid={testId}
-    >
-      {label}
-      <SortIcon column={column} />
-    </Button>
+  const { sortKey, sortOrder, handleSort, sorted } = useSortable<IpsImplementation>(
+    results,
+    "jurisdiction",
+    "asc",
   );
+  const [selected, setSelected] = useState<IpsImplementation | null>(null);
 
   return (
     <>
@@ -98,14 +60,35 @@ export function ImplementationsTable({ results }: Props) {
           <TableHeader>
             <TableRow>
               <TableHead>
-                <SortBtn column="jurisdiction" label="Jurisdiction" testId="button-sort-jurisdiction" />
+                <SortableHeader
+                  column="jurisdiction"
+                  label="Jurisdiction"
+                  testId="button-sort-jurisdiction"
+                  sortKey={sortKey}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
               </TableHead>
               <TableHead>
-                <SortBtn column="projectName" label="Project / Implementation" testId="button-sort-project" />
+                <SortableHeader
+                  column="projectName"
+                  label="Project / Implementation"
+                  testId="button-sort-project"
+                  sortKey={sortKey}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
               </TableHead>
               <TableHead>IPS Info Website</TableHead>
               <TableHead>
-                <SortBtn column="approach" label="Approach" testId="button-sort-approach" />
+                <SortableHeader
+                  column="approach"
+                  label="Approach"
+                  testId="button-sort-approach"
+                  sortKey={sortKey}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
               </TableHead>
               <TableHead className="text-right">Contacts</TableHead>
             </TableRow>

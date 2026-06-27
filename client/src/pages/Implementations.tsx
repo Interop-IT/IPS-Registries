@@ -13,6 +13,10 @@ import { Loader2, Table as TableIcon, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import {
+  useCascadingFilters,
+  type CascadingDimension,
+} from "@/hooks/useCascadingFilters";
 
 export default function Implementations() {
   const [filters, setFilters] = useState<ImplementationFilterState>({
@@ -27,75 +31,28 @@ export default function Implementations() {
     queryKey: ["/api/implementations"],
   });
 
-  const availableOptions = useMemo(() => {
-    if (!data) return { jurisdictions: [], approaches: [] };
+  const dimensions = useMemo<CascadingDimension<IpsImplementation>[]>(
+    () => [
+      { key: "jurisdictions", field: "jurisdiction", selected: filters.jurisdictions },
+      { key: "approaches", field: "approach", selected: filters.approaches },
+    ],
+    [filters],
+  );
 
-    const getFiltered = (exclude: "jurisdictions" | "approaches") =>
-      data.filter((row) => {
-        if (
-          exclude !== "jurisdictions" &&
-          filters.jurisdictions.length > 0 &&
-          !filters.jurisdictions.includes(row.jurisdiction)
-        )
-          return false;
-        if (
-          exclude !== "approaches" &&
-          filters.approaches.length > 0 &&
-          !filters.approaches.includes(row.approach || "")
-        )
-          return false;
-        if (filters.searchQuery) {
-          const q = filters.searchQuery.toLowerCase();
-          const hay = [
-            row.jurisdiction,
-            row.projectName,
-            row.primaryContact,
-            row.contactEmail,
-            row.infoWebsite,
-            row.approach,
-          ]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase();
-          if (!hay.includes(q)) return false;
-        }
-        return true;
-      });
-
-    const uniq = (rows: IpsImplementation[], key: keyof IpsImplementation) =>
-      Array.from(new Set(rows.map((r) => r[key]).filter((v): v is string => Boolean(v)))).sort();
-
-    return {
-      jurisdictions: uniq(getFiltered("jurisdictions"), "jurisdiction"),
-      approaches: uniq(getFiltered("approaches"), "approach"),
-    };
-  }, [data, filters]);
-
-  const filtered = useMemo(() => {
-    if (!data) return [];
-    return data.filter((row) => {
-      if (filters.jurisdictions.length > 0 && !filters.jurisdictions.includes(row.jurisdiction))
-        return false;
-      if (filters.approaches.length > 0 && !filters.approaches.includes(row.approach || ""))
-        return false;
-      if (filters.searchQuery) {
-        const q = filters.searchQuery.toLowerCase();
-        const hay = [
-          row.jurisdiction,
-          row.projectName,
-          row.primaryContact,
-          row.contactEmail,
-          row.infoWebsite,
-          row.approach,
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
-      return true;
-    });
-  }, [data, filters]);
+  const { availableOptions, filtered } = useCascadingFilters<IpsImplementation>({
+    data,
+    dimensions,
+    searchQuery: filters.searchQuery,
+    searchFields: [
+      "jurisdiction",
+      "projectName",
+      "primaryContact",
+      "contactEmail",
+      "infoWebsite",
+      "approach",
+    ],
+    searchMode: "joinedFields",
+  });
 
   if (isLoading) {
     return (
@@ -160,7 +117,10 @@ export default function Implementations() {
         <ImplementationFilters
           filters={filters}
           onChange={setFilters}
-          availableOptions={availableOptions}
+          availableOptions={{
+            jurisdictions: availableOptions.jurisdictions ?? [],
+            approaches: availableOptions.approaches ?? [],
+          }}
         />
 
         <section className="container px-4 py-6 md:px-6 md:py-8">
