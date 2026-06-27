@@ -86,7 +86,7 @@ export function ContactPanel({
         ) : (
           <ul className={`${listSpacing} pl-6`}>
             {emails.map((email, i) => {
-              const isEmail = /\S+@\S+\.\S+/.test(email);
+              const isEmail = /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
               return (
                 <li
                   key={`email-${i}`}
