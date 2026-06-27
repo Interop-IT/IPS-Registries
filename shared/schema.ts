@@ -31,11 +31,11 @@ export interface VendorResult {
 }
 
 export const vendorResultSchema = z.object({
-  company: z.string(),
-  profile: z.string(),
-  actor: z.string(),
-  year: z.string(),
-  event: z.string(),
+  company: z.string().trim().min(1),
+  profile: z.string().trim().min(1),
+  actor: z.string().trim().min(1),
+  year: z.string().trim().min(1),
+  event: z.string().trim().min(1),
   website: z.string().optional(),
   product: z.string().optional(),
   primaryContact: z.string().optional(),
@@ -55,7 +55,7 @@ export interface IpsImplementation {
 }
 
 export const ipsImplementationSchema = z.object({
-  jurisdiction: z.string(),
+  jurisdiction: z.string().trim().min(1),
   projectName: z.string().optional(),
   primaryContact: z.string().optional(),
   contactEmail: z.string().optional(),
