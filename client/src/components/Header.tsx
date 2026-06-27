@@ -101,11 +101,14 @@ export function Header() {
               return (
                 <span
                   key={link.href}
-                  className={`${className} cursor-not-allowed text-muted-foreground opacity-50`}
+                  className={`${className} inline-flex items-center gap-1.5 cursor-not-allowed text-muted-foreground opacity-50`}
                   aria-disabled="true"
                   data-testid={link.testId}
                 >
                   {link.label}
+                  <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">
+                    Coming soon
+                  </span>
                 </span>
               );
             }
@@ -176,6 +179,9 @@ export function Header() {
                         data-testid={`mobile-${link.testId}`}
                       >
                         {link.label}
+                        <span className="ml-2 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">
+                          Coming soon
+                        </span>
                       </span>
                     );
                   }
