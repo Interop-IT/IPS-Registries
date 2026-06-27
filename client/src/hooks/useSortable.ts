@@ -4,7 +4,7 @@ export type SortOrder = "asc" | "desc" | null;
 
 // Shared column-sort state used by both result tables. Clicking a column cycles
 // through ascending -> descending -> unsorted, and switching columns starts at
-// ascending. Sorting is a stable string comparison of the selected field.
+// ascending. Sorting is a locale-aware string comparison of the selected field.
 export function useSortable<T>(
   results: T[],
   initialKey: keyof T | null = null,
@@ -33,11 +33,13 @@ export function useSortable<T>(
     const copy = [...results];
     if (!sortKey || !sortOrder) return copy;
     return copy.sort((a, b) => {
-      const aVal = (a[sortKey] || "") as string;
-      const bVal = (b[sortKey] || "") as string;
-      if (aVal < bVal) return sortOrder === "asc" ? -1 : 1;
-      if (aVal > bVal) return sortOrder === "asc" ? 1 : -1;
-      return 0;
+      const aVal = (a[sortKey] ?? "") as string;
+      const bVal = (b[sortKey] ?? "") as string;
+      const cmp = aVal.localeCompare(bVal, undefined, {
+        sensitivity: "base",
+        numeric: true,
+      });
+      return sortOrder === "asc" ? cmp : -cmp;
     });
   }, [results, sortKey, sortOrder]);
 
