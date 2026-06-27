@@ -5,7 +5,13 @@ import {
   type IpsImplementation,
 } from "@shared/schema";
 
-// Extract sheet ID from Google Sheets URL
+/**
+ * Extracts the spreadsheet ID from a Google Sheets URL, or accepts a bare ID.
+ *
+ * @param url - A full Sheets URL or a raw sheet ID.
+ * @returns The extracted sheet ID.
+ * @throws If the value is not a recognizable URL or ID.
+ */
 function extractSheetId(url: string): string {
   let match = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
   if (match) return match[1];
@@ -15,7 +21,13 @@ function extractSheetId(url: string): string {
   throw new Error(`Invalid Google Sheets URL: ${url}`);
 }
 
-// Robust CSV parser that handles quoted multiline fields
+/**
+ * Parses a CSV document into rows of string cells, correctly handling quoted
+ * fields that contain commas, escaped quotes, and embedded newlines.
+ *
+ * @param csvText - The raw CSV text.
+ * @returns A 2D array of rows and cell values.
+ */
 function parseCSVDocument(csvText: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [];
@@ -125,6 +137,13 @@ interface CacheEntry<T> {
   fetchedAt: number;
 }
 
+/**
+ * Wraps a fetcher with in-memory TTL caching and request coalescing so repeated
+ * or concurrent calls don't trigger redundant upstream Google Sheets fetches.
+ *
+ * @param fetcher - The underlying data fetcher to memoize.
+ * @returns A cached fetch function sharing one in-flight request at a time.
+ */
 function makeSheetFetcher<T>(fetcher: () => Promise<T>): () => Promise<T> {
   let cache: CacheEntry<T> | null = null;
   let inFlight: Promise<T> | null = null;
@@ -156,6 +175,13 @@ function makeSheetFetcher<T>(fetcher: () => Promise<T>): () => Promise<T> {
   };
 }
 
+/**
+ * Builds a lookup from normalized (lowercased, trimmed, trailing-* removed)
+ * header name to its column index.
+ *
+ * @param headers - The header row cells.
+ * @returns A map of normalized header name to column index.
+ */
 function buildColumnMap(headers: string[]): Record<string, number> {
   const map: Record<string, number> = {};
   headers.forEach((h, i) => {
@@ -164,6 +190,15 @@ function buildColumnMap(headers: string[]): Record<string, number> {
   return map;
 }
 
+/**
+ * Returns the first non-empty cell value matching any of the candidate column
+ * names, allowing flexible/aliased header names across sheets.
+ *
+ * @param values - The row's cell values.
+ * @param columnMap - Map of normalized header name to column index.
+ * @param possibleNames - Candidate column names to try, in priority order.
+ * @returns The trimmed value, or `undefined` if none matched.
+ */
 function getValue(
   values: string[],
   columnMap: Record<string, number>,
@@ -251,6 +286,13 @@ const IMPLEMENTATION_HEADER_KEYS = [
   "country/jurisdiction",
 ];
 
+/**
+ * Locates the header row in an implementations sheet by scanning the first few
+ * rows for a recognized first-column header key, defaulting to row 0.
+ *
+ * @param rows - The parsed sheet rows.
+ * @returns The index of the detected header row.
+ */
 function findHeaderRowIndex(rows: string[][]): number {
   for (let i = 0; i < Math.min(rows.length, 10); i++) {
     const first = (rows[i][0] || "").toLowerCase().replace(/\*$/, "").trim();

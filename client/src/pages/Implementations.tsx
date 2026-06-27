@@ -18,6 +18,11 @@ import {
   type CascadingDimension,
 } from "@/hooks/useCascadingFilters";
 
+/**
+ * IPS Implementation Registry page (`/` and `/implementations`). Fetches registry
+ * entries, applies cascading filters and cross-field search, and renders the
+ * filters plus the table/card view with optional grouping by continent.
+ */
 export default function Implementations() {
   const [filters, setFilters] = useState<ImplementationFilterState>({
     jurisdictions: [],

@@ -10,6 +10,12 @@ interface ResultsSectionProps {
   results: VendorResult[];
 }
 
+/**
+ * Vendor Results section that toggles between table and card views and offers a
+ * group-by-company option for the card view.
+ *
+ * @param results - The vendor results to display.
+ */
 export function ResultsSection({ results }: ResultsSectionProps) {
   const [viewMode, setViewMode] = useState<"table" | "cards">("table");
   const [groupByCompany, setGroupByCompany] = useState(false);

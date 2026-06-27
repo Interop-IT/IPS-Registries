@@ -17,6 +17,15 @@ interface Props {
   groupByContinent?: boolean;
 }
 
+/**
+ * Renders a single labeled external-link row (icon + label + safe https link)
+ * inside an implementation card. Renders nothing when no URL is provided.
+ *
+ * @param icon - Lucide icon component shown before the label.
+ * @param label - Text label describing the link.
+ * @param url - Raw URL from the sheet (optional).
+ * @param testId - data-testid for the rendered link.
+ */
 function LinkRow({
   icon: Icon,
   label,
@@ -55,6 +64,14 @@ interface FlipCardProps {
   onOpenModal: (impl: IpsImplementation) => void;
 }
 
+/**
+ * A single implementation entry rendered as a flip card. The front shows summary
+ * details; flipping (or, on mobile, opening a modal) reveals the contact panel.
+ *
+ * @param impl - The implementation registry entry to display.
+ * @param index - Position in the list, used for staggered animation and test ids.
+ * @param onOpenModal - Opens the contacts modal (used on mobile instead of flipping).
+ */
 function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
   const [flipped, setFlipped] = useState(false);
   const isMobile = useIsMobile();
@@ -172,6 +189,13 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
   );
 }
 
+/**
+ * Card view of IPS implementation registry entries, rendered as flip cards with
+ * an optional grouping by continent and a mobile contacts modal.
+ *
+ * @param results - The implementation registry entries to display.
+ * @param groupByContinent - When true, groups cards under continent headings.
+ */
 export function ImplementationsCards({ results, groupByContinent = false }: Props) {
   const [modalImpl, setModalImpl] = useState<IpsImplementation | null>(null);
 

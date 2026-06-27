@@ -11,6 +11,15 @@ interface ContactPanelProps {
   compact?: boolean;
 }
 
+/**
+ * Displays a registry entry's contact names and emails, with a copy-to-clipboard
+ * action for each email. Supports a compact layout for use on the flipped card.
+ *
+ * @param primaryContact - Raw contact-name string (may be a delimited list).
+ * @param contactEmail - Raw contact-email string (may be a delimited list).
+ * @param projectName - Optional project/implementation name for context.
+ * @param compact - When true, uses tighter spacing for the card back.
+ */
 export function ContactPanel({
   primaryContact,
   contactEmail,

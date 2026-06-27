@@ -2,6 +2,10 @@ import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
+/**
+ * Light/dark theme toggle button. Initializes from localStorage (falling back to
+ * the OS preference) and persists the choice while toggling the `dark` class.
+ */
 export function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
 

@@ -7,6 +7,12 @@ interface ResultsCardsProps {
   groupByCompany?: boolean;
 }
 
+/**
+ * Card view of vendor testing results, with an optional grouping by company.
+ *
+ * @param results - The vendor results to display.
+ * @param groupByCompany - When true, groups cards under company headings.
+ */
 export function ResultsCards({ results, groupByCompany = false }: ResultsCardsProps) {
   if (results.length === 0) {
     return (

@@ -12,6 +12,11 @@ import {
   type CascadingDimension,
 } from "@/hooks/useCascadingFilters";
 
+/**
+ * Vendor Results page (`/results`). Fetches vendor testing results, applies the
+ * cascading filters and global search, and renders the hero, filters, and the
+ * table/card results section.
+ */
 export default function Home() {
   const [filters, setFilters] = useState<FilterState>({
     companies: [],

@@ -25,6 +25,13 @@ type NavLink = {
 const DEFAULT_IPS_RETURN_URL =
   "https://international-patient-summary.net/content-all-ips/";
 
+/**
+ * Returns the given value only if it is a well-formed http(s) URL, otherwise
+ * `undefined`. Guards the configurable IPS return link against unsafe schemes.
+ *
+ * @param value - The candidate URL (may be missing or malformed).
+ * @returns The original value when safe, or `undefined`.
+ */
 function sanitizeUrl(value: string | undefined | null): string | undefined {
   if (!value) return undefined;
   try {
@@ -38,6 +45,11 @@ function sanitizeUrl(value: string | undefined | null): string | undefined {
   return undefined;
 }
 
+/**
+ * Top navigation header shared across pages. Renders the IPS brand, primary nav
+ * links (with a mobile sheet menu), the theme toggle, and a configurable IPS
+ * return link fetched from `/api/config`.
+ */
 export function Header() {
   const [open, setOpen] = useState(false);
   const [location] = useLocation();

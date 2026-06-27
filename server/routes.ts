@@ -5,6 +5,12 @@ import { fetchVendorResults, fetchIpsImplementations } from "./googleSheets";
 const DEFAULT_IPS_RETURN_URL =
   "https://international-patient-summary.net/content-all-ips/";
 
+/**
+ * Resolves the IPS return URL from the environment, validating it is a safe
+ * http(s) URL and falling back to the default otherwise.
+ *
+ * @returns A safe IPS return URL.
+ */
 function resolveIpsReturnUrl(): string {
   const value = process.env.IPS_RETURN_URL;
   if (!value) return DEFAULT_IPS_RETURN_URL;
@@ -29,6 +35,15 @@ interface RateLimitEntry {
   windowStart: number;
 }
 
+/**
+ * Creates an in-memory, per-IP rate-limiting middleware. Allows up to
+ * `maxRequests` per `windowMs` window, responding with 429 when exceeded, and
+ * periodically prunes stale entries to bound memory.
+ *
+ * @param maxRequests - Maximum requests allowed per window per IP.
+ * @param windowMs - Window length in milliseconds.
+ * @returns An Express middleware enforcing the limit.
+ */
 function createRateLimiter(maxRequests: number, windowMs: number) {
   const store = new Map<string, RateLimitEntry>();
 
@@ -71,6 +86,13 @@ function createRateLimiter(maxRequests: number, windowMs: number) {
 // 60 requests per minute per IP for the public sheet-backed endpoints
 const apiRateLimit = createRateLimiter(60, 60_000);
 
+/**
+ * Registers the public API routes (`/api/config`, `/api/vendor-results`,
+ * `/api/implementations`) with rate limiting, and returns the HTTP server.
+ *
+ * @param app - The Express application to attach routes to.
+ * @returns The created HTTP server.
+ */
 export async function registerRoutes(app: Express): Promise<Server> {
   // Runtime-configurable client config. Read env vars at request time so the
   // values can be changed without a rebuild (only a server restart).
