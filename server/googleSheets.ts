@@ -290,12 +290,6 @@ async function _fetchIpsImplementations(): Promise<IpsImplementation[]> {
         "implementation approach",
         "approach",
       ]),
-      dataDomainsLink: getValue(values, columnMap, [
-        "link to data domains supported",
-        "data domains",
-        "data domains supported",
-        "domains",
-      ]),
     };
 
     if (implementation.jurisdiction) results.push(implementation);

@@ -116,12 +116,6 @@ function FlipCard({ impl, index, onOpenModal }: FlipCardProps) {
               url={impl.infoWebsite}
               testId={`link-info-${index}`}
             />
-            <LinkRow
-              icon={FileText}
-              label="Data Domains"
-              url={impl.dataDomainsLink}
-              testId={`link-domains-${index}`}
-            />
             <div className="mt-auto pt-3">
               <Button
                 variant="outline"

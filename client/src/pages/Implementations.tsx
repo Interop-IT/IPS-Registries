@@ -53,7 +53,6 @@ export default function Implementations() {
             row.contactEmail,
             row.infoWebsite,
             row.approach,
-            row.dataDomainsLink,
           ]
             .filter(Boolean)
             .join(" ")
@@ -88,7 +87,6 @@ export default function Implementations() {
           row.contactEmail,
           row.infoWebsite,
           row.approach,
-          row.dataDomainsLink,
         ]
           .filter(Boolean)
           .join(" ")

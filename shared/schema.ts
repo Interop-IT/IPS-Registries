@@ -52,7 +52,6 @@ export interface IpsImplementation {
   contactEmail?: string;
   infoWebsite?: string;
   approach?: string;
-  dataDomainsLink?: string;
 }
 
 export const ipsImplementationSchema = z.object({
@@ -62,7 +61,6 @@ export const ipsImplementationSchema = z.object({
   contactEmail: z.string().optional(),
   infoWebsite: z.string().optional(),
   approach: z.string().optional(),
-  dataDomainsLink: z.string().optional(),
 });
 
 export type InsertIpsImplementation = z.infer<typeof ipsImplementationSchema>;

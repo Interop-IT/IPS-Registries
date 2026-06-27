@@ -107,14 +107,13 @@ export function ImplementationsTable({ results }: Props) {
               <TableHead>
                 <SortBtn column="approach" label="Approach" testId="button-sort-approach" />
               </TableHead>
-              <TableHead>Data Domains</TableHead>
               <TableHead className="text-right">Contacts</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {sorted.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-32 text-center">
+                <TableCell colSpan={5} className="h-32 text-center">
                   <p className="text-muted-foreground">No implementations found</p>
                   <p className="mt-1 text-sm text-muted-foreground">Try adjusting your filters</p>
                 </TableCell>
@@ -138,9 +137,6 @@ export function ImplementationsTable({ results }: Props) {
                     </TableCell>
                     <TableCell data-testid={`text-approach-${index}`}>
                       {row.approach || <span className="text-muted-foreground">-</span>}
-                    </TableCell>
-                    <TableCell>
-                      <LinkCell url={row.dataDomainsLink} testId={`link-domains-${index}`} />
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
