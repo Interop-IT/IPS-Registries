@@ -10,8 +10,11 @@ break independently of correct hook logic.
 
 Run via the Replit **testing** skill (`runTest`). Paste the test plan below as the
 `testPlan`. The app must be running on the `Start application` workflow. Data is
-fetched live from Google Sheets, so assert on relative changes (rows decrease,
-option counts narrow) rather than exact counts.
+fetched live from Google Sheets and changes over time, so the plan must **not**
+hard-code company names, jurisdictions, years, or row counts. Instead, capture a
+currently visible value at runtime and reuse it for later assertions, and assert
+only on relative changes (rows decrease, option counts narrow) rather than exact
+content or counts.
 
 ## Route mapping (wouter)
 
@@ -27,64 +30,85 @@ option counts narrow) rather than exact counts.
 3. [Verify] At least 5 result rows are visible.
 4. [Browser] Open the Actor filter dropdown (`button-filter-actor`). Note the
    number of option buttons (`data-testid^="option-"`) = ACTOR_COUNT_BEFORE. Close it.
-5. [Browser] Open the Year filter (`button-filter-year`), select `option-2024`, close it.
-6. [Verify] Badge `badge-filter-2024` and `button-reset-filters` are visible.
+5. [Browser] Open the Year filter (`button-filter-year`). Read the **first**
+   available option button (`data-testid^="option-"`); capture its visible label
+   as YEAR_VALUE and the suffix of its `data-testid` (the part after `option-`) as
+   YEAR_OPTION_ID. Click that option, then close the dropdown.
+6. [Verify] A filter badge for the captured year is visible
+   (`data-testid="badge-filter-{YEAR_VALUE}"`) and `button-reset-filters` is visible.
 7. [Browser] Re-open the Actor filter (`button-filter-actor`).
 8. [Verify] Option count now = ACTOR_COUNT_AFTER, and ACTOR_COUNT_AFTER <=
    ACTOR_COUNT_BEFORE (cascading narrows the actor options to those co-occurring
-   with year 2024). Report both numbers. Close the dropdown.
+   with the selected year). Report both numbers. Close the dropdown.
 9. [Browser] Click `button-reset-filters` to clear filters.
 10. [Verify] Note total visible rows = ROWS_BEFORE_SEARCH.
-11. [Browser] Type `Altera` into `input-search-all`.
-12. [Verify] Visible rows < ROWS_BEFORE_SEARCH and every visible
-    `text-company-*` cell contains `Altera`. Clear the search afterward.
-13. [Verify] `button-sort-company` shows the neutral up/down icon (unsorted).
-14. [Browser] Click `button-sort-company` once.
-15. [Verify] Header shows the ascending (arrow-up) icon and the first company
-    cell is alphabetically early.
-16. [Browser] Click `button-sort-company` a second time.
-17. [Verify] Header shows the descending (arrow-down) icon and the first company
-    cell is alphabetically late.
-18. [Browser] Click `button-sort-company` a third time.
-19. [Verify] Header returns to the neutral up/down icon (unsorted).
+11. [Browser] Read the first visible company cell (`data-testid^="text-company-"`)
+    and capture its trimmed text as COMPANY_VALUE. Pick a distinctive search token
+    from it (e.g. the first whole word of COMPANY_VALUE) and capture it as
+    COMPANY_TOKEN.
+12. [Browser] Type COMPANY_TOKEN into `input-search-all`.
+13. [Verify] Visible rows < ROWS_BEFORE_SEARCH and every visible
+    `text-company-*` cell contains COMPANY_TOKEN (case-insensitive). Clear the
+    search afterward.
+14. [Verify] `button-sort-company` shows the neutral up/down icon (unsorted).
+15. [Browser] Click `button-sort-company` once.
+16. [Verify] Header shows the ascending (arrow-up) icon and the first company
+    cell is alphabetically <= the last visible company cell.
+17. [Browser] Click `button-sort-company` a second time.
+18. [Verify] Header shows the descending (arrow-down) icon and the first company
+    cell is alphabetically >= the last visible company cell.
+19. [Browser] Click `button-sort-company` a third time.
+20. [Verify] Header returns to the neutral up/down icon (unsorted).
 
 ### Part B — IPS Implementation Registry (`/`)
 
-20. [Browser] Navigate to `/`. Wait for rows (`data-testid^="row-impl-"`).
-21. [Verify] At least 3 implementation rows are visible.
-22. [Browser] Open the Approach filter (`button-filter-implementation-approach`).
+21. [Browser] Navigate to `/`. Wait for rows (`data-testid^="row-impl-"`).
+22. [Verify] At least 3 implementation rows are visible.
+23. [Browser] Open the Approach filter (`button-filter-implementation-approach`).
     Note option count = APPROACH_COUNT_BEFORE. Close it.
-23. [Browser] Open the Jurisdiction filter (`button-filter-jurisdiction`), select
-    `option-Australia`, close it.
-24. [Verify] Badge `badge-impl-filter-Australia` and `button-impl-reset-filters`
-    are visible.
-25. [Browser] Re-open the Approach filter.
-26. [Verify] Option count = APPROACH_COUNT_AFTER, and APPROACH_COUNT_AFTER <=
-    APPROACH_COUNT_BEFORE (cascading narrows approaches to those used by
-    Australia). Report both numbers. Close the dropdown.
-27. [Browser] Click `button-impl-reset-filters` to clear filters.
-28. [Verify] Note total visible rows = IMPL_ROWS_BEFORE.
-29. [Browser] Type `Australia` into `input-impl-search-all`.
-30. [Verify] Visible rows < IMPL_ROWS_BEFORE and visible `text-jurisdiction-*`
-    cells contain `Australia`. Clear the search afterward.
-31. [Verify] `button-sort-jurisdiction` shows the ascending icon by default
+24. [Browser] Read the first visible jurisdiction cell
+    (`data-testid^="text-jurisdiction-"`) and capture its trimmed text as
+    JURISDICTION_VALUE.
+25. [Browser] Open the Jurisdiction filter (`button-filter-jurisdiction`), select
+    the option whose label/`data-testid` suffix matches JURISDICTION_VALUE
+    (`data-testid="option-{JURISDICTION_VALUE}"`), then close it.
+26. [Verify] A filter badge for the captured jurisdiction is visible
+    (`data-testid="badge-impl-filter-{JURISDICTION_VALUE}"`) and
+    `button-impl-reset-filters` is visible.
+27. [Browser] Re-open the Approach filter.
+28. [Verify] Option count = APPROACH_COUNT_AFTER, and APPROACH_COUNT_AFTER <=
+    APPROACH_COUNT_BEFORE (cascading narrows approaches to those used by the
+    selected jurisdiction). Report both numbers. Close the dropdown.
+29. [Browser] Click `button-impl-reset-filters` to clear filters.
+30. [Verify] Note total visible rows = IMPL_ROWS_BEFORE.
+31. [Browser] Type JURISDICTION_VALUE into `input-impl-search-all`.
+32. [Verify] Visible rows < IMPL_ROWS_BEFORE and every visible
+    `text-jurisdiction-*` cell contains JURISDICTION_VALUE (case-insensitive).
+    Clear the search afterward.
+33. [Verify] `button-sort-jurisdiction` shows the ascending icon by default
     (this table sorts by Jurisdiction asc on load).
-32. [Browser] Click `button-sort-approach` once.
-33. [Verify] `button-sort-approach` shows the ascending icon and
+34. [Browser] Click `button-sort-approach` once.
+35. [Verify] `button-sort-approach` shows the ascending icon and
     `button-sort-jurisdiction` reverts to the neutral up/down icon.
-34. [Browser] Click `button-sort-approach` a second time.
-35. [Verify] `button-sort-approach` shows the descending icon.
-36. [Browser] Click `button-sort-approach` a third time.
-37. [Verify] `button-sort-approach` returns to the neutral up/down icon (unsorted).
+36. [Browser] Click `button-sort-approach` a second time.
+37. [Verify] `button-sort-approach` shows the descending icon.
+38. [Browser] Click `button-sort-approach` a third time.
+39. [Verify] `button-sort-approach` returns to the neutral up/down icon (unsorted).
 
 Report PASS only if every `[Verify]` step holds on both screens.
 
 ## Why these assertions catch component-layer regressions
 
-- A broken filter→`onChange` binding means no badge appears (steps 6, 24) and the
-  dropdowns never narrow (steps 8, 26).
-- A broken search binding means the row count never drops (steps 12, 30).
+- A broken filter→`onChange` binding means no badge appears (steps 6, 26) and the
+  dropdowns never narrow (steps 8, 28).
+- A broken search binding means the row count never drops (steps 13, 32).
 - A broken sort-arrow indicator or `onSort` wiring means the icon does not cycle
-  asc → desc → unsorted (steps 13-19, 31-37).
+  asc → desc → unsorted (steps 14-20, 33-39).
+
+## Why values are captured at runtime
+
+The plan reads a live company, jurisdiction, and year from the rendered UI before
+asserting on them, so it stays valid as the Google Sheets source data changes. No
+step assumes a specific vendor, country, year, or row count.
 
 Last verified passing: both screens, June 2026.
