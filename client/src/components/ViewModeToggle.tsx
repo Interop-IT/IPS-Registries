@@ -44,20 +44,22 @@ export function ViewModeToggle({
           variant={viewMode === "table" ? activeVariant : "ghost"}
           size="sm"
           onClick={() => onChange("table")}
+          aria-pressed={viewMode === "table"}
           data-testid="button-view-table"
           className={buttonClassName}
         >
-          <Table className="h-4 w-4" />
+          <Table className="h-4 w-4" aria-hidden="true" />
           <span className={labelClassName}>{tableLabel}</span>
         </Button>
         <Button
           variant={viewMode === "cards" ? activeVariant : "ghost"}
           size="sm"
           onClick={() => onChange("cards")}
+          aria-pressed={viewMode === "cards"}
           data-testid="button-view-cards"
           className={buttonClassName}
         >
-          <LayoutGrid className="h-4 w-4" />
+          <LayoutGrid className="h-4 w-4" aria-hidden="true" />
           <span className={labelClassName}>{cardsLabel}</span>
         </Button>
       </div>
