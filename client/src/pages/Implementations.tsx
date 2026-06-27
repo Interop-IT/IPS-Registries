@@ -8,9 +8,9 @@ import {
 } from "@/components/ImplementationFilters";
 import { ImplementationsTable } from "@/components/ImplementationsTable";
 import { ImplementationsCards } from "@/components/ImplementationsCards";
+import { ViewModeToggle } from "@/components/ViewModeToggle";
 import type { IpsImplementation } from "@shared/schema";
-import { Loader2, Table as TableIcon, LayoutGrid } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import {
@@ -130,41 +130,30 @@ export default function Implementations() {
                 Showing {filtered.length} of {data?.length ?? 0} implementations
               </p>
               <div className="flex flex-wrap items-center gap-3">
-                {viewMode === "cards" && (
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      id="group-continent"
-                      checked={groupByContinent}
-                      onCheckedChange={setGroupByContinent}
-                      data-testid="switch-group-continent"
-                    />
-                    <Label htmlFor="group-continent" className="text-sm cursor-pointer">
-                      Group by Continent
-                    </Label>
-                  </div>
-                )}
-                <div className="flex gap-1 rounded-md border p-1">
-                  <Button
-                    variant={viewMode === "table" ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setViewMode("table")}
-                    className="gap-1.5 min-h-[44px] sm:min-h-0"
-                    data-testid="button-view-table"
-                  >
-                    <TableIcon className="h-4 w-4" />
-                    <span>List View</span>
-                  </Button>
-                  <Button
-                    variant={viewMode === "cards" ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setViewMode("cards")}
-                    className="gap-1.5 min-h-[44px] sm:min-h-0"
-                    data-testid="button-view-cards"
-                  >
-                    <LayoutGrid className="h-4 w-4" />
-                    <span>Item View</span>
-                  </Button>
-                </div>
+                <ViewModeToggle
+                  viewMode={viewMode}
+                  onChange={setViewMode}
+                  tableLabel="List View"
+                  cardsLabel="Item View"
+                  activeVariant="default"
+                  containerClassName="flex gap-1 rounded-md border p-1"
+                  buttonClassName="gap-1.5 min-h-[44px] sm:min-h-0"
+                  groupingControl={
+                    viewMode === "cards" ? (
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          id="group-continent"
+                          checked={groupByContinent}
+                          onCheckedChange={setGroupByContinent}
+                          data-testid="switch-group-continent"
+                        />
+                        <Label htmlFor="group-continent" className="text-sm cursor-pointer">
+                          Group by Continent
+                        </Label>
+                      </div>
+                    ) : null
+                  }
+                />
               </div>
             </div>
 
