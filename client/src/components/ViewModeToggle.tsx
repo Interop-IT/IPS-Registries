@@ -48,7 +48,7 @@ export function ViewModeToggle({
   containerClassName,
   buttonClassName,
   groupingControl,
-}: ViewModeToggleProps) {
+}: Readonly<ViewModeToggleProps>) {
   return (
     <>
       {groupingControl}
