@@ -1,5 +1,4 @@
 import { ExternalLink } from "lucide-react";
-import interopLogo from "@assets/Interop-PNG-ImageTransparent_1781710478896.webp";
 
 /**
  * Site footer with Interop-IT branding and related external links, shared across
@@ -71,16 +70,10 @@ export function Footer() {
               href="https://www.interop.it/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-md text-xs hover-elevate"
+              className="inline-flex items-center gap-1 rounded-md px-1 text-xs hover-elevate"
               data-testid="link-powered-by-interop"
             >
-              <span>Powered by</span>
-              <img
-                src={interopLogo}
-                alt="Interop IT"
-                className="h-5 w-auto"
-                data-testid="img-interop-logo"
-              />
+              <span>Powered by Interop.it | © 2026 Interop IT inc. All Rights Reserved.</span>
             </a>
           </div>
         </div>
