@@ -65,7 +65,6 @@ export function Footer() {
           </div>
           
           <div className="mt-8 flex flex-col items-center gap-3 border-t pt-6 text-center text-sm text-muted-foreground">
-            <p>© {new Date().getFullYear()} IPS Registries. All rights reserved.</p>
             <a
               href="https://www.interop.it/"
               target="_blank"
