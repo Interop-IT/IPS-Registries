@@ -85,7 +85,8 @@ const CACHE_TTL_MS = 5 * 60 * 1000;
 
 async function fetchSheetCsv(sheetsUrl: string, envVarName: string): Promise<string[][]> {
   if (!sheetsUrl) {
-    throw new Error(`${envVarName} environment variable is not set`);
+    console.warn(`${envVarName} environment variable is not set; returning no rows`);
+    return [];
   }
 
   const sheetId = extractSheetId(sheetsUrl);
