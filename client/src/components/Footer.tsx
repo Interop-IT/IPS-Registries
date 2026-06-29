@@ -72,7 +72,7 @@ export function Footer() {
               className="inline-flex items-center gap-1 rounded-md px-1 text-xs hover-elevate"
               data-testid="link-powered-by-interop"
             >
-              <span>Powered by Interop.it | © 2026 Interop IT inc. All Rights Reserved.</span>
+              <span>Powered by Interop.it | © {new Date().getFullYear()} Interop IT inc. All Rights Reserved.</span>
             </a>
           </div>
         </div>
