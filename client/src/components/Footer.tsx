@@ -29,7 +29,6 @@ export function Footer() {
                     className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
                   >
                     IPS Website
-                    <ExternalLink className="h-3 w-3" />
                   </a>
                 </li>
                 <li>
@@ -40,7 +39,6 @@ export function Footer() {
                     className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
                   >
                     For Patients
-                    <ExternalLink className="h-3 w-3" />
                   </a>
                 </li>
                 <li>
@@ -51,7 +49,6 @@ export function Footer() {
                     className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
                   >
                     For Healthcare Professionals
-                    <ExternalLink className="h-3 w-3" />
                   </a>
                 </li>
               </ul>
@@ -60,13 +57,20 @@ export function Footer() {
             <div>
               <h4 className="mb-3 font-semibold">Contact</h4>
               <p className="text-sm text-muted-foreground">
-                For questions about this registry or IPS implementation, visit the official IPS website.
+                <a
+                    href="https://international-patient-summary.net/healthcare-professional/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                  >
+                    IPS Contact Information (for Registry or website inquiries))
+                  </a>
               </p>
             </div>
           </div>
           
           <div className="mt-8 flex flex-col items-center gap-3 border-t pt-6 text-center text-sm text-muted-foreground">
-            <p>© {new Date().getFullYear()} IPS Registries. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} IPS Web Editorial Team – All rights reserved.</p>
             <a
               href="https://www.interop.it/"
               target="_blank"
