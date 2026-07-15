@@ -126,8 +126,9 @@ export function Header() {
                 <a
                   key={link.href}
                   href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  // IPS Team wants it all to seem like internal website referrals...no new windows 7/9/2026 meeting
+                  // target="_blank"
+                  // rel="noopener noreferrer"
                   className={className}
                   style={linkColor}
                   data-testid={link.testId}
