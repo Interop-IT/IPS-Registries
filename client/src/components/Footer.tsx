@@ -58,12 +58,10 @@ export function Footer() {
               <h4 className="mb-3 font-semibold">Contact</h4>
               <p className="text-sm text-muted-foreground">
                 <a
-                    href="https://international-patient-summary.net/healthcare-professional/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="https://international-patient-summary.net/contact/"
                     className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
                   >
-                    IPS Contact Information (for Registry or website inquiries))
+                    IPS Contact Information (for registry or website inquiries)
                   </a>
               </p>
             </div>
