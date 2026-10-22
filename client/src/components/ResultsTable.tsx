@@ -1,4 +1,5 @@
 import type { VendorResult } from "@shared/schema";
+import { VendorWebsiteLink } from "./VendorWebsiteLink";
 import {
   Table,
   TableBody,
@@ -128,15 +129,13 @@ export function ResultsTable({ results }: ResultsTableProps) {
               >
                 <TableCell className="font-medium" data-testid={`text-company-${index}`}>
                   {result.website ? (
-                    <a
+                    <VendorWebsiteLink
                       href={result.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="text-primary hover:underline"
                       data-testid={`link-company-${index}`}
                     >
                       {result.company}
-                    </a>
+                    </VendorWebsiteLink>
                   ) : (
                     result.company
                   )}
