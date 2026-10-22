@@ -21,7 +21,7 @@ Public React + Express application for browsing IPS vendor testing results and I
 ## Scan Anchors
 
 - Production server entry: `server/index.ts`; public routes: `server/routes.ts`.
-- Highest-risk code area: `server/googleSheets.ts` because it fetches and parses untrusted external content on demand.
+- Highest-risk server code areas: `server/googleSheets.ts` because it fetches and parses untrusted external content on demand, and `server/routes.ts` because it enforces the public API's rate limiting and runtime URL handling.
 - Highest-risk client renderers: `client/src/components/ResultsCards.tsx`, `ResultsTable.tsx`, `ImplementationsCards.tsx`, `ImplementationsTable.tsx`, and `ContactPanel.tsx` because they turn sheet data into links and visible content.
 - Public surfaces: `/api/config`, `/api/vendor-results`, `/api/implementations`, plus the two React pages in `client/src/pages/`.
 - Dev-only areas usually ignored: `server/vite.ts` development middleware, `client/src/components/examples/`, `client/src/lib/mockData.ts`, `attached_assets/`, and build/config scripts.
@@ -38,7 +38,7 @@ The public APIs return registry content directly to any internet user. The appli
 
 ### Denial of Service
 
-Because the public endpoints trigger network fetches and CSV parsing, an attacker can try to exhaust server or upstream resources with repeated requests or slow upstream behavior. Public API handlers must bound the cost of each request using caching, timeouts, and/or rate limiting so unauthenticated traffic cannot repeatedly force expensive upstream work.
+Because the public endpoints trigger network fetches and CSV parsing, an attacker can try to exhaust server or upstream resources with repeated requests or slow upstream behavior. Public API handlers must bound the cost of each request using caching, timeouts, and/or rate limiting so unauthenticated traffic cannot repeatedly force expensive upstream work. Any client-identity logic used for throttling must rely only on trusted proxy metadata or direct socket information, not raw user-supplied forwarding headers.
 
 ### Elevation of Privilege
 
