@@ -1,5 +1,3 @@
-import { ExternalLink } from "lucide-react";
-
 /**
  * Site footer with Interop-IT branding and related external links, shared across
  * all pages.
@@ -23,34 +21,25 @@ export function Footer() {
                 <li>
                   <a
                     href="https://international-patient-summary.net/"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
                   >
                     IPS Website
-                    <ExternalLink className="h-3 w-3" />
                   </a>
                 </li>
                 <li>
                   <a
                     href="https://international-patient-summary.net/patient/"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
                   >
                     For Patients
-                    <ExternalLink className="h-3 w-3" />
                   </a>
                 </li>
                 <li>
                   <a
                     href="https://international-patient-summary.net/healthcare-professional/"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
                   >
                     For Healthcare Professionals
-                    <ExternalLink className="h-3 w-3" />
                   </a>
                 </li>
               </ul>
@@ -59,7 +48,12 @@ export function Footer() {
             <div>
               <h4 className="mb-3 font-semibold">Contact</h4>
               <p className="text-sm text-muted-foreground">
-                For questions about this registry or IPS implementation, visit the official IPS website.
+                <a
+                  href="https://international-patient-summary.net/contact/"
+                  className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                >
+                  IPS Contact Information (for registry or website inquiries)
+                </a>
               </p>
             </div>
           </div>

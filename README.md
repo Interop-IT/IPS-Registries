@@ -21,7 +21,7 @@ The application has two main areas:
 - Global text search across all fields (jurisdiction, project, company, product, contacts, and more)
 - Group by Continent toggle in Item View for organizing implementations geographically
 - Reveal-on-demand contact details (primary contact and email)
-- Light / dark mode
+- Light mode on every page load, with a dark-mode toggle for the current page
 - Fully responsive, mobile-optimized layout with touch-friendly controls
 
 ## Tech Stack
@@ -34,7 +34,7 @@ The application has two main areas:
 
 ## Installation
 
-Requires Node.js 20+.
+Requires Node.js 20.19+ (or 22.12+).
 
 ```bash
 # Install dependencies
@@ -55,20 +55,29 @@ The app runs at `http://localhost:5000` by default.
 | `npm run start` | Run the production build |
 | `npm run check` | Type-check the project with TypeScript |
 | `npm run test:dependencies` | Check brace-pattern compatibility and deeply nested pattern safety |
+| `npm run test:production` | Smoke-test the existing production build and optional .env loading |
 | `npm run db:push` | Push the Drizzle schema to the database |
 
 ## Environment Variables
 
-Configure the following environment variables (for example, in a `.env` file). Do not commit real values.
+Copy `.env.example` to `.env` in the project root and configure the sheet URLs, or supply environment variables through your host. Both development and production startup automatically load this optional file; existing environment variables take precedence. Do not commit real values. Missing sheet configuration produces an API error, not a successful empty registry.
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `IPS_IMPLEMENTATIONS_SHEETS_URL` | Yes | Google Sheets URL/ID for the Implementation Registry data |
-| `VENDOR_RESULTS_SHEETS_URL` | Yes | Google Sheets URL/ID for the Vendor Results data |
+| `IPS_IMPLEMENTATIONS_SHEETS_URL` | Yes, unless fallback set | Google Sheets URL/ID for the Implementation Registry data |
+| `VENDOR_RESULTS_SHEETS_URL` | Yes, unless fallback set | Google Sheets URL/ID for the Vendor Results data |
 | `GOOGLE_SHEETS_URL` | Optional | Fallback sheet URL/ID used when either of the above is not set |
 | `IPS_RETURN_URL` | Optional | Destination for the header's "Return to IPS website" link (defaults to `https://international-patient-summary.net/content-all-ips/`) |
-| `SESSION_SECRET` | Recommended | Secret used to sign server sessions |
 | `PORT` | Optional | Port the server listens on (defaults to `5000`) |
+
+### Production startup
+
+Run `npm run build` with development dependencies installed, then `npm start`.
+The startup commands work in Windows and POSIX shells without `cross-env`.
+For a production-only installation, retain `dist/`, `scripts/start.mjs`,
+`package.json`, and `package-lock.json`, install runtime dependencies with
+`npm ci --omit=dev`, then run `npm start` from the project root.
+The production server does not load Vite, its plugins, or tsx.
 
 ## Data & API
 

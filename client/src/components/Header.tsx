@@ -78,7 +78,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between px-4 md:h-20 md:px-6">
         <div className="flex items-center gap-2 md:gap-4">
           <a
-            href="https://international-patient-summary.net/ips-vendor-support/"
+            href="https://international-patient-summary.net/"
             className="shrink-0 rounded-md hover-elevate"
             data-testid="link-logo"
           >
@@ -126,8 +126,6 @@ export function Header() {
                 <a
                   key={link.href}
                   href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className={className}
                   style={linkColor}
                   data-testid={link.testId}
@@ -196,8 +194,6 @@ export function Header() {
                       <a
                         key={link.href}
                         href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className={className}
                         style={linkColor}
                         data-testid={`mobile-${link.testId}`}
