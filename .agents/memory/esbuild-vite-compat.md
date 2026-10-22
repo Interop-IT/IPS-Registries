@@ -12,7 +12,6 @@ esbuild 0.28.x has a regression where it cannot transform destructuring for the 
 ## Required package versions
 - `vite@^8.0.0` in devDependencies
 - `@vitejs/plugin-react@^6.0.0` (required for vite 8)
-- `@tailwindcss/vite@^4.3.1` (vite 8 compatible: `^5.2.0 || ^6 || ^7 || ^8`)
 - `@types/node@^20.19.0` (vite 8 peer dep: `^20.19.0 || >=22.12.0`)
 - `esbuild@^0.28.1` in devDependencies (the non-vulnerable version)
 - Global override: `"esbuild": "^0.28.1"` in package.json overrides — use the literal range that EXACTLY matches the direct `esbuild` devDependency, NOT the `$esbuild` reference form (see `$esbuild` section below for why)

@@ -1,3 +1,7 @@
 ---
-- [esbuild 0.28.x + vite 6 incompatibility](esbuild-vite-compat.md) — esbuild 0.28.1 breaks vite's dev optimizer; use scoped override exception for vite.
+- [esbuild and Vite compatibility](esbuild-vite-compat.md) — keep Vite 8 with esbuild 0.28.x; older Vite optimizer targets are incompatible.
 - [Stale dev server after merge](dev-server-stale-after-merge.md) — ERR_MODULE_NOT_FOUND for vite dep-*.js chunks after a dep upgrade merges; just restart the workflow.
+- [Dependency remediation](dependency-remediation.md) — Tailwind 3 security fixes need a guarded braces replacement; test normal and deeply nested patterns.
+- [Footer ownership wording](footer-ownership.md) — keep one Interop copyright line; avoid restoring a second IPS notice from colleague branches.
+- [License approval](license-approval.md) — owner explicitly approved the proprietary branch license unchanged; do not infer permission to revise its terms.
+- [Public API client identity](public-api-client-identity.md) — prefer shared proxy limits over spoofable client identities until proxy trust is verified.

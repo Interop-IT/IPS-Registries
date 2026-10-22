@@ -58,10 +58,9 @@ function createRateLimiter(maxRequests: number, windowMs: number) {
   }, windowMs).unref();
 
   return function rateLimitMiddleware(req: Request, res: Response, next: NextFunction) {
-    const ip =
-      (req.headers["x-forwarded-for"] as string | undefined)?.split(",")[0].trim() ||
-      req.socket.remoteAddress ||
-      "unknown";
+    // Forwarding headers are untrusted without a verified proxy configuration.
+    // Use the transport peer even behind a proxy (where peers share a limit).
+    const ip = req.socket.remoteAddress || "unknown";
 
     const now = Date.now();
     let entry = store.get(ip);
@@ -96,7 +95,7 @@ const apiRateLimit = createRateLimiter(60, 60_000);
 export async function registerRoutes(app: Express): Promise<Server> {
   // Runtime-configurable client config. Read env vars at request time so the
   // values can be changed without a rebuild (only a server restart).
-  app.get("/api/config", (_req, res) => {
+  app.get("/api/config", apiRateLimit, (_req, res) => {
     res.json({
       ipsReturnUrl: resolveIpsReturnUrl(),
     });

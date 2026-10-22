@@ -3,24 +3,19 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
 /**
- * Light/dark theme toggle button. Initializes from localStorage (falling back to
- * the OS preference) and persists the choice while toggling the `dark` class.
+ * Every page load starts in light mode. The toggle changes only the current page,
+ * without reading or saving a persistent theme preference.
  */
 export function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
-    const stored = localStorage.getItem("theme") as "light" | "dark" | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = stored || (prefersDark ? "dark" : "light");
-    setTheme(initialTheme);
-    document.documentElement.classList.toggle("dark", initialTheme === "dark");
+    document.documentElement.classList.remove("dark");
   }, []);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
@@ -29,6 +24,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
+      aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
       data-testid="button-theme-toggle"
     >
       {theme === "light" ? (

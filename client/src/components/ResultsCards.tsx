@@ -1,4 +1,5 @@
 import type { VendorResult } from "@shared/schema";
+import { VendorWebsiteLink } from "./VendorWebsiteLink";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, FileText, User, Calendar, MapPin, Package, Globe, UserCircle, Mail } from "lucide-react";
 
@@ -51,15 +52,13 @@ export function ResultsCards({ results, groupByCompany = false }: ResultsCardsPr
               <div className="flex items-center gap-3 border-b pb-2">
                 <Building2 className="h-5 w-5 text-primary" />
                 {website ? (
-                  <a
+                  <VendorWebsiteLink
                     href={website}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="text-lg font-semibold text-primary hover:underline"
                     data-testid={`link-company-header-${company}`}
                   >
                     {company}
-                  </a>
+                  </VendorWebsiteLink>
                 ) : (
                   <h3 className="text-lg font-semibold" data-testid={`text-company-header-${company}`}>
                     {company}
@@ -119,15 +118,13 @@ export function ResultsCards({ results, groupByCompany = false }: ResultsCardsPr
                         <div className="flex items-center gap-2 text-sm">
                           <Globe className="h-4 w-4 text-muted-foreground" />
                           <span className="text-muted-foreground">Website:</span>
-                          <a
+                          <VendorWebsiteLink
                             href={result.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
                             className="text-primary hover:underline truncate"
                             data-testid={`link-website-${index}`}
                           >
                             {result.website.substring(0, 25)}
-                          </a>
+                          </VendorWebsiteLink>
                         </div>
                       )}
                       {result.primaryContact && (
@@ -171,15 +168,13 @@ export function ResultsCards({ results, groupByCompany = false }: ResultsCardsPr
             <CardTitle className="flex items-start gap-2 text-base">
               <Building2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
               {result.website ? (
-                <a
+                <VendorWebsiteLink
                   href={result.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="line-clamp-2 text-primary hover:underline"
                   data-testid={`link-company-${index}`}
                 >
                   {result.company}
-                </a>
+                </VendorWebsiteLink>
               ) : (
                 <span className="line-clamp-2" data-testid={`text-company-${index}`}>
                   {result.company}
@@ -229,15 +224,13 @@ export function ResultsCards({ results, groupByCompany = false }: ResultsCardsPr
               <div className="flex items-center gap-2 text-sm">
                 <Globe className="h-4 w-4 text-muted-foreground" />
                 <span className="text-muted-foreground">Website:</span>
-                <a
+                <VendorWebsiteLink
                   href={result.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="text-primary hover:underline truncate"
                   data-testid={`link-website-${index}`}
                 >
                   {result.website.substring(0, 25)}
-                </a>
+                </VendorWebsiteLink>
               </div>
             )}
             {result.primaryContact && (
