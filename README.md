@@ -75,7 +75,7 @@ Copy `.env.example` to `.env` in the project root and configure the sheet URLs, 
 Run `npm run build` with development dependencies installed, then `npm start`.
 The startup commands work in Windows and POSIX shells without `cross-env`.
 For a production-only installation, retain `dist/`, `scripts/start.mjs`,
-`package.json`, and `package-lock.json`, install runtime dependencies with
+`package.json`, `package-lock.json`, and `LICENSE.md`, install runtime dependencies with
 `npm ci --omit=dev`, then run `npm start` from the project root.
 The production server does not load Vite, its plugins, or tsx.
 
@@ -90,3 +90,7 @@ Data is fetched server-side from public Google Sheets CSV exports and served to 
 | `GET /api/config` | Runtime client config (e.g. the "Return to IPS website" link URL) |
 
 Sheets are chosen as the data store so non-technical contributors can update the registries directly. The client caches responses with React Query and treats the data as relatively static.
+
+## License
+
+This repository is governed by the [Proprietary License and Terms of Use](LICENSE.md) of Interop IT inc. It is not an MIT-licensed or open-source release. See LICENSE.md for the complete terms.

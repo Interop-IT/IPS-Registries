@@ -3,3 +3,4 @@
 - [Stale dev server after merge](dev-server-stale-after-merge.md) — ERR_MODULE_NOT_FOUND for vite dep-*.js chunks after a dep upgrade merges; just restart the workflow.
 - [Dependency remediation](dependency-remediation.md) — Tailwind 3 security fixes need a guarded braces replacement; test normal and deeply nested patterns.
 - [Footer ownership wording](footer-ownership.md) — keep one Interop copyright line; avoid restoring a second IPS notice from colleague branches.
+- [License approval](license-approval.md) — owner explicitly approved the proprietary branch license unchanged; do not infer permission to revise its terms.
