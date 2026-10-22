@@ -54,6 +54,7 @@ The app runs at `http://localhost:5000` by default.
 | `npm run build` | Build the client (Vite) and server (esbuild) for production |
 | `npm run start` | Run the production build |
 | `npm run check` | Type-check the project with TypeScript |
+| `npm run test:dependencies` | Check brace-pattern compatibility and deeply nested pattern safety |
 | `npm run db:push` | Push the Drizzle schema to the database |
 
 ## Environment Variables

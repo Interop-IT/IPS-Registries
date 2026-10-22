@@ -1,3 +1,4 @@
 ---
-- [esbuild 0.28.x + vite 6 incompatibility](esbuild-vite-compat.md) — esbuild 0.28.1 breaks vite's dev optimizer; use scoped override exception for vite.
+- [esbuild and Vite compatibility](esbuild-vite-compat.md) — keep Vite 8 with esbuild 0.28.x; older Vite optimizer targets are incompatible.
 - [Stale dev server after merge](dev-server-stale-after-merge.md) — ERR_MODULE_NOT_FOUND for vite dep-*.js chunks after a dep upgrade merges; just restart the workflow.
+- [Dependency remediation](dependency-remediation.md) — Tailwind 3 security fixes need a guarded braces replacement; test normal and deeply nested patterns.

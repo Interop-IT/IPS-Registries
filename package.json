@@ -8,6 +8,7 @@
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc",
+    "test:dependencies": "node --test tests/dependency-security.test.cjs",
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
@@ -52,7 +53,7 @@
     "drizzle-orm": "^0.45.2",
     "drizzle-zod": "^0.7.0",
     "embla-carousel-react": "^8.6.0",
-    "express": "^4.21.2",
+    "express": "^4.22.3",
     "express-session": "^1.18.1",
     "framer-motion": "^11.13.1",
     "input-otp": "^1.4.2",
@@ -81,7 +82,7 @@
     "@replit/vite-plugin-cartographer": "^0.4.1",
     "@replit/vite-plugin-dev-banner": "^0.1.1",
     "@replit/vite-plugin-runtime-error-modal": "^0.0.3",
-    "@tailwindcss/typography": "^0.5.15",
+    "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
@@ -95,22 +96,23 @@
     "@types/react-dom": "^18.3.1",
     "@types/ws": "^8.5.13",
     "@vitejs/plugin-react": "^6.0.2",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.6.1",
     "drizzle-kit": "^0.31.10",
     "esbuild": "^0.28.1",
     "jsdom": "^29.1.1",
-    "postcss": "^8.5.15",
-    "tailwindcss": "^3.4.17",
+    "postcss": "^8.5.31",
+    "tailwindcss": "^3.4.19",
     "tsx": "^4.22.4",
     "typescript": "5.6.3",
-    "vite": "^8.0.16",
-    "vitest": "^4.1.9"
+    "vite": "^8.3.5",
+    "vitest": "^4.1.12"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"
   },
   "overrides": {
-    "brace-expansion": ">=2.0.3 <3.0.0",
+    "brace-expansion": ">=2.1.7 <3.0.0",
+    "braces": "npm:@zklogic/braces@3.0.7",
     "esbuild": "^0.28.1",
     "glob": ">=10.5.0 <11.0.0",
     "@esbuild-kit/core-utils": {
@@ -124,8 +126,12 @@
     "on-headers": "1.1.0",
     "path-to-regexp": "0.1.13",
     "picomatch": ">=2.3.2 <3.0.0",
-    "qs": ">=6.15.2 <7.0.0",
+    "nanoid": "^3.3.20",
+    "postcss-selector-parser": "^7.1.7",
+    "proxy-addr": "^2.0.8",
+    "qs": ">=6.16.1 <7.0.0",
     "rollup": ">=4.58.1 <5.0.0",
+    "undici": "^7.30.1",
     "yaml": ">=2.8.3 <3.0.0"
   }
 }
