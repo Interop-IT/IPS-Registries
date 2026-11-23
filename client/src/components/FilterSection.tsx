@@ -15,7 +15,6 @@ interface FilterSectionProps {
   availableOptions: {
     companies: string[];
     statuses: string[];
-    actors: string[];
     years: string[];
     events: string[];
   };
@@ -61,7 +60,7 @@ export function FilterSection({ filters, onChange, availableOptions }: FilterSec
       selectLabel: "Actor",
       badgeLabel: "Actor",
       placeholder: "All actors",
-      options: availableOptions.actors,
+      options: ["Creator", "Consumer"],
       selected: filters.actors,
       onChange: (v) => update("actors", v),
     },
@@ -94,6 +93,7 @@ export function FilterSection({ filters, onChange, availableOptions }: FilterSec
       onSearchChange={(v) => onChange({ ...filters, searchQuery: v })}
       dimensions={dimensions}
       desktopGridClass="hidden grid-cols-1 gap-4 sm:grid-cols-2 md:grid lg:grid-cols-5"
+      contentWidthClass="max-w-7xl"
       onResetAll={() =>
         onChange({
           companies: [],

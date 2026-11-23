@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Redirect } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -9,14 +9,16 @@ import Implementations from "@/pages/Implementations";
 
 /**
  * Client-side route table. Maps the registry routes (`/`, `/implementations`,
- * `/results`) to their pages and falls back to the not-found page.
+ * `/vendors`) to their pages, redirects the legacy `/results` path, and falls
+ * back to the not-found page.
  */
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Implementations} />
       <Route path="/implementations" component={Implementations} />
-      <Route path="/results" component={Home} />
+      <Route path="/vendors" component={Home} />
+      <Route path="/results"><Redirect to="/vendors" replace /></Route>
       <Route component={NotFound} />
     </Switch>
   );

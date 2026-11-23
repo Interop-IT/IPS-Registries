@@ -18,18 +18,18 @@ content or counts.
 
 ## Route mapping (wouter)
 
-- `/results` → Vendor Results screen (`Home.tsx`)
+- `/vendors` → Vendor Registry screen (`Home.tsx`); `/results` redirects to it
 - `/` and `/implementations` → IPS Implementation Registry (`Implementations.tsx`)
 
 ## Test plan
 
-### Part A — Vendor Results (`/results`)
+### Part A — Vendor Registry (`/vendors`)
 
 1. [New Context] Create a new browser context (desktop viewport).
-2. [Browser] Navigate to `/results`. Wait for rows (`data-testid^="row-result-"`).
+2. [Browser] Navigate to `/vendors`. Wait for rows (`data-testid^="row-result-"`).
 3. [Verify] At least 5 result rows are visible.
-4. [Browser] Open the Actor filter dropdown (`button-filter-actor`). Note the
-   number of option buttons (`data-testid^="option-"`) = ACTOR_COUNT_BEFORE. Close it.
+4. [Browser] Open the Actor filter dropdown (`button-filter-actor`).
+   [Verify] Its options are Creator and Consumer. Close it.
 5. [Browser] Open the Year filter (`button-filter-year`). Read the **first**
    available option button (`data-testid^="option-"`); capture its visible label
    as YEAR_VALUE and the suffix of its `data-testid` (the part after `option-`) as
@@ -37,9 +37,8 @@ content or counts.
 6. [Verify] A filter badge for the captured year is visible
    (`data-testid="badge-filter-{YEAR_VALUE}"`) and `button-reset-filters` is visible.
 7. [Browser] Re-open the Actor filter (`button-filter-actor`).
-8. [Verify] Option count now = ACTOR_COUNT_AFTER, and ACTOR_COUNT_AFTER <=
-   ACTOR_COUNT_BEFORE (cascading narrows the actor options to those co-occurring
-   with the selected year). Report both numbers. Close the dropdown.
+8. [Verify] The Actor options remain Creator and Consumer even with the year
+   selected. Close the dropdown.
 9. [Browser] Click `button-reset-filters` to clear filters.
 10. [Verify] Note total visible rows = ROWS_BEFORE_SEARCH.
 11. [Browser] Read the first visible company cell (`data-testid^="text-company-"`)
@@ -100,7 +99,7 @@ Report PASS only if every `[Verify]` step holds on both screens.
 ## Why these assertions catch component-layer regressions
 
 - A broken filter→`onChange` binding means no badge appears (steps 6, 26) and the
-  dropdowns never narrow (steps 8, 28).
+  implementation approach dropdown never narrows (step 28).
 - A broken search binding means the row count never drops (steps 13, 32).
 - A broken sort-arrow indicator or `onSort` wiring means the icon does not cycle
   asc → desc → unsorted (steps 14-20, 33-39).

@@ -3,6 +3,7 @@ import { ResultsTable } from "./ResultsTable";
 import { ResultsCards } from "./ResultsCards";
 import { ViewModeToggle } from "./ViewModeToggle";
 import { useState } from "react";
+import { isMobileViewport } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
 
@@ -17,14 +18,16 @@ interface ResultsSectionProps {
  * @param results - The vendor results to display.
  */
 export function ResultsSection({ results }: ResultsSectionProps) {
-  const [viewMode, setViewMode] = useState<"table" | "cards">("table");
+  const [viewMode, setViewMode] = useState<"table" | "cards">(
+    () => isMobileViewport() ? "cards" : "table",
+  );
   const [groupByCompany, setGroupByCompany] = useState(false);
 
   return (
     <section className="py-6 md:py-8">
       <div className="container px-4 md:px-6">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between md:mb-6">
+        <div className="mx-auto max-w-[96rem] pl-[max(0px,calc((100%-80rem)/2))]">
+          <div className="mb-4 flex max-w-7xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between md:mb-6">
             <div>
               <h3 className="text-lg font-semibold md:text-xl">
                 Vendors
@@ -34,7 +37,7 @@ export function ResultsSection({ results }: ResultsSectionProps) {
               </p>
             </div>
             
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+            <div className="mb-4 flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
               <ViewModeToggle
                 viewMode={viewMode}
                 onChange={setViewMode}

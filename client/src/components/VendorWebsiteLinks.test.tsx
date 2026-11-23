@@ -57,6 +57,19 @@ describe.each(views)("$name vendor website safety", ({ Component, expectedLinks 
     }
   });
 
+  describe("table primary link display", () => {
+    it("uses a short link label without hiding non-URL sheet text", () => {
+      const { container } = render(<ResultsTable results={[
+        { ...vendor, website: "https://example.com/a-long-path" },
+        { ...vendor, company: "Another Vendor", website: "Website coming soon" },
+      ]} />);
+      const link = container.querySelector("a");
+      expect(link?.textContent).toBe("Link");
+      expect(link?.getAttribute("href")).toBe("https://example.com/a-long-path");
+      expect(container.textContent).toContain("Website coming soon");
+    });
+  });
+
   it.each([
     "https://example.com/path?q=value#section",
     "http://example.com/",

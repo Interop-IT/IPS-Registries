@@ -9,6 +9,7 @@ import {
 import { ImplementationsTable } from "@/components/ImplementationsTable";
 import { ImplementationsCards } from "@/components/ImplementationsCards";
 import { ViewModeToggle } from "@/components/ViewModeToggle";
+import { isMobileViewport } from "@/hooks/use-mobile";
 import type { IpsImplementation } from "@shared/schema";
 import { Loader2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
@@ -29,7 +30,9 @@ export default function Implementations() {
     approaches: [],
     searchQuery: "",
   });
-  const [viewMode, setViewMode] = useState<"table" | "cards">("table");
+  const [viewMode, setViewMode] = useState<"table" | "cards">(
+    () => isMobileViewport() ? "cards" : "table",
+  );
   const [groupByContinent, setGroupByContinent] = useState(false);
 
   const { data, isLoading, error } = useQuery<IpsImplementation[]>({

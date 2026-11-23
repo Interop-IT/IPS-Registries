@@ -61,7 +61,7 @@ export function Header() {
 
   const navLinks: NavLink[] = [
     { href: "/", label: "Implementation Registry", testId: "link-implementations" },
-    { href: "/results", label: "Vendor Registry", testId: "link-results" },
+    { href: "/vendors", label: "Vendor Registry", testId: "link-results" },
     {
       href: ipsReturnUrl,
       label: "Return to IPS website",

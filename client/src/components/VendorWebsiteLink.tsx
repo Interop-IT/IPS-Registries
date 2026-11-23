@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 interface VendorWebsiteLinkProps {
   href: string;
   children: ReactNode;
+  fallback?: ReactNode;
   className?: string;
   "data-testid"?: string;
 }
@@ -11,6 +12,7 @@ interface VendorWebsiteLinkProps {
 export function VendorWebsiteLink({
   href,
   children,
+  fallback,
   className,
   "data-testid": testId,
 }: VendorWebsiteLinkProps) {
@@ -25,7 +27,7 @@ export function VendorWebsiteLink({
   }
 
   if (!safeUrl) {
-    return <span data-testid={testId?.replace(/^link-/, "text-")}>{children}</span>;
+    return <span data-testid={testId?.replace(/^link-/, "text-")}>{fallback ?? children}</span>;
   }
 
   return (

@@ -7,6 +7,8 @@ export interface CascadingDimension<T> {
   field: keyof T;
   // Currently selected values for this dimension
   selected: string[];
+  // Match selected text within the field instead of requiring an exact value.
+  match?: "contains";
 }
 
 // "anyField": query must be a substring of a single field (default).
@@ -52,7 +54,7 @@ export function useCascadingFilters<T>({
   searchFields,
   searchMode = "anyField",
 }: UseCascadingFiltersParams<T>): UseCascadingFiltersResult<T> {
-  const selectedKey = JSON.stringify(dimensions.map((d) => [d.key, d.selected]));
+  const selectedKey = JSON.stringify(dimensions.map((d) => [d.key, d.selected, d.match]));
   const fieldKey = dimensions.map((d) => String(d.field)).join(",");
   const searchFieldKey = searchFields.map(String).join(",");
 
@@ -85,9 +87,15 @@ export function useCascadingFilters<T>({
       );
     };
 
-    const matchesDimension = (row: T, dim: CascadingDimension<T>) =>
-      dim.selected.length === 0 ||
-      dim.selected.includes(String(row[dim.field] ?? ""));
+    const matchesDimension = (row: T, dim: CascadingDimension<T>) => {
+      if (dim.selected.length === 0) return true;
+      const value = String(row[dim.field] ?? "");
+      return dim.selected.some((selected) =>
+        dim.match === "contains"
+          ? value.toLowerCase().includes(selected.toLowerCase())
+          : value === selected,
+      );
+    };
 
     const filtered = data.filter(
       (row) =>

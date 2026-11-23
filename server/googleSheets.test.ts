@@ -14,6 +14,20 @@ afterEach(() => {
 });
 
 describe("vendor sheet importer", () => {
+  it("reads the Status column used by the current vendor sheet", async () => {
+    vi.stubEnv("VENDOR_RESULTS_SHEETS_URL", "example");
+    const currentCsv = [
+      "Company*,Primary Link*,Status*,Validation Event*,Year*,Actor*,Product Name,Primary Contact*,Contact Email*",
+      "Vendor A,,Production,,,,,,",
+      "Vendor B,,Development,,,,,,",
+    ].join("\n");
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(currentCsv)));
+    const { fetchVendorResults } = await import("./googleSheets");
+
+    const results = await fetchVendorResults();
+    expect(results.map(({ status }) => status)).toEqual(["Production", "Development"]);
+  });
+
   it.each([
     "https://docs.google.com/spreadsheets/d/example/edit?gid=931424222",
     "https://docs.google.com/spreadsheets/d/example/edit#gid=931424222",

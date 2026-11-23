@@ -7,7 +7,7 @@ The registry supports the ongoing work of the **Joint Initiative Council for Glo
 The application has two main areas:
 
 - **Implementation Registry** (landing page) — jurisdictions and projects implementing the IPS, organized by country and project, with reveal-on-demand primary contacts.
-- **Vendor Registry** — vendors, products, implementation status, and optional validation events, searchable across the sheet fields.
+- **Vendor Registry** (`/vendors`) — vendors, products, implementation status, and optional validation events, searchable across the sheet fields. The previous `/results` address redirects to `/vendors`.
 
 ## Live App
 
@@ -16,8 +16,8 @@ The application has two main areas:
 ## Features
 
 - Two registries: IPS Implementation Registry and Vendor Testing Results
-- Dual view modes — **List View** (compact table) and **Item View** (cards)
-- Multi-select cascading filters — each filter shows only the options still available given your other selections
+- Dual view modes — **List View** (compact table) and **Item View** (cards); Item View is the default on screens narrower than 768px
+- Multi-select cascading filters — options reflect other selections, except the vendor Actor filter, which always offers Creator and Consumer and matches those words within the actor text
 - Global text search across all fields (jurisdiction, project, company, product, contacts, and more)
 - Group by Continent toggle in Item View for organizing implementations geographically
 - Reveal-on-demand contact details (primary contact and email)
@@ -93,7 +93,7 @@ Data is fetched server-side from public Google Sheets CSV exports and served to 
 
 Sheets are chosen as the data store so non-technical contributors can update the registries directly. The client caches responses with React Query and treats the data as relatively static.
 The vendor importer recognizes Company, Product Name, Primary Contact, Contact Email,
-Primary Link, Production / Development, Validation Event, Year, and Actor columns.
+Primary Link, Status (or Production / Development), Validation Event, Year, and Actor columns.
 Only Company is required. The server caches sheet data for five minutes.
 
 ## License

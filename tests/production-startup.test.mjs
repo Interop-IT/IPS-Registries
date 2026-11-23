@@ -88,7 +88,9 @@ test("production starts without a .env file or development tooling", async () =>
     const css = html.match(/href="([^"]+\.css)"/)?.[1];
     assert.ok(css, "compiled stylesheet is linked");
     assert.equal((await fetch(`${base}${css}`)).status, 200);
-    assert.equal((await fetch(`${base}/results`)).status, 200);
+    for (const route of ["/vendors", "/results"]) {
+      assert.equal((await fetch(`${base}${route}`)).status, 200);
+    }
     for (const endpoint of ["/api/implementations", "/api/vendor-results"]) {
       const response = await fetch(`${base}${endpoint}`);
       assert.equal(response.status, 500, "missing sheets must not look like empty data");

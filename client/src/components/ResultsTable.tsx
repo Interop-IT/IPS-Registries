@@ -10,14 +10,14 @@ interface ResultsTableProps {
 
 const columns: { key: keyof VendorResult; label: string }[] = [
   { key: "company", label: "Company" },
-  { key: "product", label: "Product Name" },
-  { key: "primaryContact", label: "Primary Contact" },
-  { key: "contactInfo", label: "Contact Email" },
   { key: "website", label: "Primary Link" },
-  { key: "status", label: "Production / Development" },
+  { key: "status", label: "Status" },
   { key: "event", label: "Validation Event" },
   { key: "year", label: "Year" },
   { key: "actor", label: "Actor" },
+  { key: "product", label: "Product Name" },
+  { key: "primaryContact", label: "Primary Contact" },
+  { key: "contactInfo", label: "Contact Email" }
 ];
 
 /** Displays the vendor sheet columns in a sortable table. */
@@ -30,7 +30,7 @@ export function ResultsTable({ results }: ResultsTableProps) {
         <TableHeader>
           <TableRow>
             {columns.map(({ key, label }) => (
-              <TableHead key={key}>
+              <TableHead key={key} className={key === "company" ? "min-w-[160px]" : undefined}>
                 <SortableHeader column={key} label={label} testId={`button-sort-${key}`}
                   sortKey={sortKey} sortOrder={sortOrder} onSort={handleSort} />
               </TableHead>
@@ -53,8 +53,8 @@ export function ResultsTable({ results }: ResultsTableProps) {
                   <TableCell key={key} className={key === "company" ? "font-medium" : undefined}
                     data-testid={`text-${key}-${index}`}>
                     {key === "website" && value ? (
-                      <VendorWebsiteLink href={value} className="text-primary hover:underline">
-                        {value}
+                      <VendorWebsiteLink href={value} fallback={value} className="text-primary hover:underline">
+                        Link
                       </VendorWebsiteLink>
                     ) : value || <span className="text-muted-foreground">-</span>}
                   </TableCell>

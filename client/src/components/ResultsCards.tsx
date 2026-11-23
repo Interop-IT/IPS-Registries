@@ -13,7 +13,7 @@ function VendorCard({ result, index, grouped }: { result: VendorResult; index: n
     ["Product Name", result.product],
     ["Primary Contact", result.primaryContact],
     ["Contact Email", result.contactInfo],
-    ["Production / Development", result.status],
+    ["Status", result.status],
     ["Validation Event", result.event],
     ["Year", result.year],
     ["Actor", result.actor],

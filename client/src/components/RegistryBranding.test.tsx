@@ -75,11 +75,11 @@ describe("registry branding", () => {
     render(<Header />);
     const desktop = screen.getByTestId("link-results");
     expect(desktop.tagName).toBe("A");
-    expect(desktop.getAttribute("href")).toBe("/results");
+    expect(desktop.getAttribute("href")).toBe("/vendors");
 
     fireEvent.click(screen.getByTestId("button-mobile-menu"));
     const mobile = screen.getByTestId("mobile-link-results");
     expect(mobile.tagName).toBe("A");
-    expect(mobile.getAttribute("href")).toBe("/results");
+    expect(mobile.getAttribute("href")).toBe("/vendors");
   });
 });

@@ -38,6 +38,7 @@ interface FilterPanelProps<K extends string = string> {
   dimensions: FilterPanelDimension<K>[];
   // Tailwind classes for the desktop multi-select grid (column count varies)
   desktopGridClass: string;
+  contentWidthClass?: string;
   onResetAll: () => void;
   onRemoveFilter: (key: K, value: string) => void;
   // Scope inserted into data-testids ("" for results, "impl-" for implementations)
@@ -57,6 +58,7 @@ interface FilterPanelProps<K extends string = string> {
  * @param onSearchChange - Callback for search input changes.
  * @param dimensions - The multi-select filter dimensions to render.
  * @param desktopGridClass - Tailwind classes for the desktop filter grid.
+ * @param contentWidthClass - Maximum width of the filter content.
  * @param onResetAll - Clears all filters and the search query.
  * @param onRemoveFilter - Removes a single selected value from a dimension.
  * @param idScope - Prefix inserted into data-testids to keep both screens unique.
@@ -69,6 +71,7 @@ export function FilterPanel<K extends string = string>({
   onSearchChange,
   dimensions,
   desktopGridClass,
+  contentWidthClass = "max-w-6xl",
   onResetAll,
   onRemoveFilter,
   idScope,
@@ -97,7 +100,7 @@ export function FilterPanel<K extends string = string>({
   return (
     <section className="border-b bg-card py-4 md:py-6">
       <div className="container px-4 md:px-6">
-        <div className="mx-auto max-w-6xl">
+        <div className={`mx-auto ${contentWidthClass}`}>
           <div className="mb-3 flex items-center justify-between md:mb-4">
             <h3 className="text-base font-semibold md:text-lg">{title}</h3>
             {totalActive > 0 && (

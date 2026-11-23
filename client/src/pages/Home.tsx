@@ -12,7 +12,7 @@ import {
 } from "@/hooks/useCascadingFilters";
 
 /**
- * Vendor Registry page (`/results`). Fetches vendor entries, applies the
+ * Vendor Registry page (`/vendors`). Fetches vendor entries, applies the
  * cascading filters and global search, and renders the heading, filters, and the
  * table/card results section.
  */
@@ -31,13 +31,12 @@ export default function Home() {
     queryKey: ['/api/vendor-results'],
   });
 
-  // Cascading filters + global search are handled by a shared hook. Each filter
-  // shows only options that still exist after applying all OTHER filters.
+  // The actor filter uses fixed substring choices; other options cascade.
   const dimensions = useMemo<CascadingDimension<VendorResult>[]>(
     () => [
       { key: "companies", field: "company", selected: filters.companies },
       { key: "statuses", field: "status", selected: filters.statuses },
-      { key: "actors", field: "actor", selected: filters.actors },
+      { key: "actors", field: "actor", selected: filters.actors, match: "contains" },
       { key: "years", field: "year", selected: filters.years },
       { key: "events", field: "event", selected: filters.events },
     ],
@@ -119,7 +118,6 @@ export default function Home() {
           availableOptions={{
             companies: availableOptions.companies ?? [],
             statuses: availableOptions.statuses ?? [],
-            actors: availableOptions.actors ?? [],
             years: availableOptions.years ?? [],
             events: availableOptions.events ?? [],
           }}

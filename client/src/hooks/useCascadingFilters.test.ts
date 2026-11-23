@@ -47,7 +47,7 @@ function vendorDimensions(
   return [
     { key: "companies", field: "company", selected: selected.companies ?? [] },
     { key: "statuses", field: "status", selected: selected.statuses ?? [] },
-    { key: "actors", field: "actor", selected: selected.actors ?? [] },
+    { key: "actors", field: "actor", selected: selected.actors ?? [], match: "contains" },
     { key: "years", field: "year", selected: selected.years ?? [] },
     { key: "events", field: "event", selected: selected.events ?? [] },
   ];
@@ -66,6 +66,31 @@ const VENDOR_SEARCH_FIELDS: (keyof VendorResult)[] = [
 ];
 
 describe("useCascadingFilters - Vendor Results (anyField search)", () => {
+  it("matches actor choices as case-insensitive text, including either selected choice", () => {
+    const data = [
+      ...vendors,
+      { ...vendors[0], company: "Lowercase", actor: "content creator" },
+      { ...vendors[0], company: "No actor", actor: "" },
+    ];
+    const { result, rerender } = renderHook(
+      ({ actors }) => useCascadingFilters<VendorResult>({
+        data,
+        dimensions: vendorDimensions({ actors }),
+        searchQuery: "",
+        searchFields: VENDOR_SEARCH_FIELDS,
+      }),
+      { initialProps: { actors: ["Creator"] } },
+    );
+    expect(result.current.filtered.map((row) => row.company)).toEqual(["Acme Health", "Lowercase"]);
+    expect(result.current.availableOptions.years).toEqual(["2024"]);
+
+    rerender({ actors: ["Creator", "Consumer"] });
+    expect(result.current.filtered).toHaveLength(4);
+    expect(result.current.availableOptions.years).toEqual(["2023", "2024"]);
+
+    rerender({ actors: [] });
+    expect(result.current.filtered).toHaveLength(5);
+  });
   it("returns all rows and full option sets when nothing is selected", () => {
     const { result } = renderHook(() =>
       useCascadingFilters<VendorResult>({

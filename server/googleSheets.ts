@@ -277,7 +277,7 @@ async function _fetchVendorResults(): Promise<VendorResult[]> {
         "email",
         "phone",
       ]),
-      status: getValue(values, columnMap, ["production / development", "production/development"]),
+      status: getValue(values, columnMap, ["status", "production / development", "production/development"]),
     };
     if (!result.company) continue;
     const parsed = vendorResultSchema.safeParse(result);
