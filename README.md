@@ -34,7 +34,7 @@ The application has two main areas:
 
 ## Installation
 
-Requires Node.js 20.19+ (or 22.12+).
+Requires Node.js 20.19+. Does not work on Windows with Node 22+
 
 ```bash
 # Install dependencies
