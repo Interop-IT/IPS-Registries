@@ -34,7 +34,7 @@ The application has two main areas:
 
 ## Installation
 
-Requires Node.js 20.19+. Does not work on Windows with Node 22+
+Requires Node.js 20.19+. Does not work on Windows or Ubuntu with Node 22+ due to package dependency
 
 ```bash
 # Install dependencies
@@ -78,6 +78,8 @@ For a production-only installation, retain `dist/`, `scripts/start.mjs`,
 `package.json`, `package-lock.json`, and `LICENSE.md`, install runtime dependencies with
 `npm ci --omit=dev`, then run `npm start` from the project root.
 The production server does not load Vite, its plugins, or tsx.
+
+`node ./dist/index.js`
 
 ## Data & API
 
