@@ -50,7 +50,7 @@ describe.each(views)("$name vendor website safety", ({ Component, expectedLinks 
     expect(container.querySelectorAll("a")).toHaveLength(0);
     expect(container.textContent).toContain(vendor.company);
     if (website) {
-      // Card views preserve the existing abbreviated website text.
+      // Card views retain the website text even when it is not a safe link.
       if (expectedLinks === 2) {
         expect(container.textContent).toContain(website.substring(0, 25));
       }

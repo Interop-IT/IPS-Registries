@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/Header";
-import { HeroSection } from "@/components/HeroSection";
 import { FilterSection, type FilterState } from "@/components/FilterSection";
 import { ResultsSection } from "@/components/ResultsSection";
 import { Footer } from "@/components/Footer";
@@ -13,14 +12,14 @@ import {
 } from "@/hooks/useCascadingFilters";
 
 /**
- * Vendor Results page (`/results`). Fetches vendor testing results, applies the
- * cascading filters and global search, and renders the hero, filters, and the
+ * Vendor Registry page (`/results`). Fetches vendor entries, applies the
+ * cascading filters and global search, and renders the heading, filters, and the
  * table/card results section.
  */
 export default function Home() {
   const [filters, setFilters] = useState<FilterState>({
     companies: [],
-    profiles: [],
+    statuses: [],
     actors: [],
     years: [],
     events: [],
@@ -37,7 +36,7 @@ export default function Home() {
   const dimensions = useMemo<CascadingDimension<VendorResult>[]>(
     () => [
       { key: "companies", field: "company", selected: filters.companies },
-      { key: "profiles", field: "profile", selected: filters.profiles },
+      { key: "statuses", field: "status", selected: filters.statuses },
       { key: "actors", field: "actor", selected: filters.actors },
       { key: "years", field: "year", selected: filters.years },
       { key: "events", field: "event", selected: filters.events },
@@ -51,7 +50,7 @@ export default function Home() {
     searchQuery: filters.searchQuery,
     searchFields: [
       "company",
-      "profile",
+      "status",
       "actor",
       "year",
       "event",
@@ -62,27 +61,6 @@ export default function Home() {
     ],
   });
 
-  // Calculate stats
-  const stats = useMemo(() => {
-    if (!vendorResults || vendorResults.length === 0) {
-      return {
-        totalVendors: 0,
-        totalResults: 0,
-        latestEvent: "N/A",
-      };
-    }
-
-    const uniqueVendors = new Set(vendorResults.map(r => r.company));
-    const events = vendorResults.map(r => r.event).filter(Boolean);
-    const latestEvent = events.length > 0 ? events[0] : "N/A";
-    
-    return {
-      totalVendors: uniqueVendors.size,
-      totalResults: vendorResults.length,
-      latestEvent,
-    };
-  }, [vendorResults]);
-
   if (isLoading) {
     return (
       <div className="flex min-h-screen flex-col">
@@ -90,7 +68,7 @@ export default function Home() {
         <main className="flex flex-1 items-center justify-center">
           <div className="text-center">
             <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-            <p className="mt-4 text-lg font-medium">Loading vendor testing results...</p>
+            <p className="mt-4 text-lg font-medium">Loading vendor registry...</p>
             <p className="mt-2 text-sm text-muted-foreground">Fetching data from Google Sheets</p>
           </div>
         </main>
@@ -123,17 +101,24 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <HeroSection
-          totalVendors={stats.totalVendors}
-          totalResults={stats.totalResults}
-          latestEvent={stats.latestEvent}
-        />
+        <section className="border-b bg-card py-6 md:py-10">
+          <div className="container px-4 md:px-6">
+            <div className="mx-auto max-w-6xl">
+              <h2 className="text-2xl font-bold md:text-3xl" style={{ color: "hsl(348, 83%, 47%)" }}>
+                IPS Vendor Registry
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm text-muted-foreground md:text-base">
+                Explore vendor products, implementation status, and validation events for the International Patient Summary.
+              </p>
+            </div>
+          </div>
+        </section>
         <FilterSection
           filters={filters}
           onChange={setFilters}
           availableOptions={{
             companies: availableOptions.companies ?? [],
-            profiles: availableOptions.profiles ?? [],
+            statuses: availableOptions.statuses ?? [],
             actors: availableOptions.actors ?? [],
             years: availableOptions.years ?? [],
             events: availableOptions.events ?? [],

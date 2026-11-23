@@ -2,7 +2,7 @@ import { FilterPanel, type FilterPanelDimension } from "./FilterPanel";
 
 export interface FilterState {
   companies: string[];
-  profiles: string[];
+  statuses: string[];
   actors: string[];
   years: string[];
   events: string[];
@@ -14,18 +14,18 @@ interface FilterSectionProps {
   onChange: (filters: FilterState) => void;
   availableOptions: {
     companies: string[];
-    profiles: string[];
+    statuses: string[];
     actors: string[];
     years: string[];
     events: string[];
   };
 }
 
-type DimensionKey = "companies" | "profiles" | "actors" | "years" | "events";
+type DimensionKey = "companies" | "statuses" | "actors" | "years" | "events";
 
 /**
  * Vendor Results filter bar. A thin adapter that maps the screen's five filter
- * dimensions (company, profile, actor, year, event) and global search onto the
+ * dimensions (company, status, actor, year, event) and global search onto the
  * shared {@link FilterPanel}.
  *
  * @param filters - Current filter selections and search query.
@@ -48,13 +48,13 @@ export function FilterSection({ filters, onChange, availableOptions }: FilterSec
       onChange: (v) => update("companies", v),
     },
     {
-      key: "profiles",
-      selectLabel: "IHE Profile",
-      badgeLabel: "Profile",
-      placeholder: "All profiles",
-      options: availableOptions.profiles,
-      selected: filters.profiles,
-      onChange: (v) => update("profiles", v),
+      key: "statuses",
+      selectLabel: "Production / Development",
+      badgeLabel: "Status",
+      placeholder: "All statuses",
+      options: availableOptions.statuses,
+      selected: filters.statuses,
+      onChange: (v) => update("statuses", v),
     },
     {
       key: "actors",
@@ -97,7 +97,7 @@ export function FilterSection({ filters, onChange, availableOptions }: FilterSec
       onResetAll={() =>
         onChange({
           companies: [],
-          profiles: [],
+          statuses: [],
           actors: [],
           years: [],
           events: [],

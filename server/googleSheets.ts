@@ -83,17 +83,22 @@ const FETCH_TIMEOUT_MS = 15_000;
 // Cache TTL: 5 minutes
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
-async function fetchSheetCsv(sheetsUrl: string, envVarName: string): Promise<string[][]> {
+async function fetchSheetCsv(sheetsUrl: string, envVarName: string, sheetGid?: string): Promise<string[][]> {
   if (!sheetsUrl) {
     throw new Error(`${envVarName} environment variable is not set`);
   }
 
   const sheetId = extractSheetId(sheetsUrl);
-  const urls = [
-    `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=0`,
-    `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`,
-    `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`,
-  ];
+  const urls = sheetGid === undefined
+    ? [
+        `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=0`,
+        `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`,
+        `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`,
+      ]
+    : [
+        `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${sheetGid}`,
+        `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${sheetGid}`,
+      ];
 
   let lastError: Error | null = null;
 
@@ -219,11 +224,22 @@ async function _fetchVendorResults(): Promise<VendorResult[]> {
   // Prefer dedicated vendor-results URL; fall back to GOOGLE_SHEETS_URL for backward compat
   const sheetsUrl =
     process.env.VENDOR_RESULTS_SHEETS_URL || process.env.GOOGLE_SHEETS_URL || "";
-  const rows = await fetchSheetCsv(sheetsUrl, "VENDOR_RESULTS_SHEETS_URL");
+  let gid: string | undefined;
+  if (sheetsUrl && !/^[a-zA-Z0-9-_]+$/.test(sheetsUrl.trim())) {
+    const url = new URL(sheetsUrl);
+    gid = url.searchParams.get("gid") ?? new URLSearchParams(url.hash.slice(1)).get("gid") ?? undefined;
+    if (gid !== undefined && !/^\d+$/.test(gid)) {
+      throw new Error("Invalid vendor sheet gid");
+    }
+  }
+  const rows = await fetchSheetCsv(sheetsUrl, "VENDOR_RESULTS_SHEETS_URL", gid);
 
   if (rows.length === 0) return [];
   const headers = rows[0];
   const columnMap = buildColumnMap(headers);
+  if (!["company", "vendor", "organization"].some((key) => columnMap[key] !== undefined)) {
+    throw new Error("Vendor sheet is missing a Company column");
+  }
 
   const results: VendorResult[] = [];
   let skipped = 0;
@@ -237,8 +253,9 @@ async function _fetchVendorResults(): Promise<VendorResult[]> {
         getValue(values, columnMap, ["ips profile", "profile", "ihe profile", "iheprofile"]) || "",
       actor: getValue(values, columnMap, ["actor"]) || "",
       year: getValue(values, columnMap, ["year"]) || "",
-      event: getValue(values, columnMap, ["event", "connectathon", "location"]) || "",
+      event: getValue(values, columnMap, ["validation event", "event", "connectathon", "location"]) || "",
       website: getValue(values, columnMap, [
+        "primary link",
         "link to company website",
         "website",
         "company website",
@@ -253,12 +270,14 @@ async function _fetchVendorResults(): Promise<VendorResult[]> {
         "primarycontact",
       ]),
       contactInfo: getValue(values, columnMap, [
+        "contact email",
         "contact info",
         "contact_info",
         "contactinfo",
         "email",
         "phone",
       ]),
+      status: getValue(values, columnMap, ["production / development", "production/development"]),
     };
     if (!result.company) continue;
     const parsed = vendorResultSchema.safeParse(result);

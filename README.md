@@ -7,7 +7,7 @@ The registry supports the ongoing work of the **Joint Initiative Council for Glo
 The application has two main areas:
 
 - **Implementation Registry** (landing page) — jurisdictions and projects implementing the IPS, organized by country and project, with reveal-on-demand primary contacts.
-- **Vendor Results** — vendors that have tested IPS at healthcare interoperability events, searchable across company, IHE profile, actor, year, and event.
+- **Vendor Registry** — vendors, products, implementation status, and optional validation events, searchable across the sheet fields.
 
 ## Live App
 
@@ -65,7 +65,7 @@ Copy `.env.example` to `.env` in the project root and configure the sheet URLs, 
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `IPS_IMPLEMENTATIONS_SHEETS_URL` | Yes, unless fallback set | Google Sheets URL/ID for the Implementation Registry data |
-| `VENDOR_RESULTS_SHEETS_URL` | Yes, unless fallback set | Google Sheets URL/ID for the Vendor Results data |
+| `VENDOR_RESULTS_SHEETS_URL` | Yes, unless fallback set | Google Sheets URL/ID for the Vendor Registry; include the tab's numeric `gid` in the URL to select a non-default tab |
 | `GOOGLE_SHEETS_URL` | Optional | Fallback sheet URL/ID used when either of the above is not set |
 | `IPS_RETURN_URL` | Optional | Destination for the header's "Return to IPS website" link (defaults to `https://international-patient-summary.net/content-all-ips/`) |
 | `PORT` | Optional | Port the server listens on (defaults to `5000`) |
@@ -90,6 +90,9 @@ Data is fetched server-side from public Google Sheets CSV exports and served to 
 | `GET /api/config` | Runtime client config (e.g. the "Return to IPS website" link URL) |
 
 Sheets are chosen as the data store so non-technical contributors can update the registries directly. The client caches responses with React Query and treats the data as relatively static.
+The vendor importer recognizes Company, Product Name, Primary Contact, Contact Email,
+Primary Link, Production / Development, Validation Event, Year, and Actor columns.
+Only Company is required. The server caches sheet data for five minutes.
 
 ## License
 

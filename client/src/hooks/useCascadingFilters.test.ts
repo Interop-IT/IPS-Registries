@@ -7,6 +7,7 @@ const vendors: VendorResult[] = [
   {
     company: "Acme Health",
     profile: "IPS",
+    status: "Production",
     actor: "Content Creator",
     year: "2024",
     event: "IHE NA Connectathon",
@@ -18,6 +19,7 @@ const vendors: VendorResult[] = [
   {
     company: "Acme Health",
     profile: "XDS",
+    status: "Development",
     actor: "Content Consumer",
     year: "2023",
     event: "IHE EU Connectathon",
@@ -28,6 +30,7 @@ const vendors: VendorResult[] = [
   {
     company: "Beta Medical",
     profile: "IPS",
+    status: "Production",
     actor: "Content Consumer",
     year: "2024",
     event: "IHE EU Connectathon",
@@ -43,7 +46,7 @@ function vendorDimensions(
 ): CascadingDimension<VendorResult>[] {
   return [
     { key: "companies", field: "company", selected: selected.companies ?? [] },
-    { key: "profiles", field: "profile", selected: selected.profiles ?? [] },
+    { key: "statuses", field: "status", selected: selected.statuses ?? [] },
     { key: "actors", field: "actor", selected: selected.actors ?? [] },
     { key: "years", field: "year", selected: selected.years ?? [] },
     { key: "events", field: "event", selected: selected.events ?? [] },
@@ -52,7 +55,7 @@ function vendorDimensions(
 
 const VENDOR_SEARCH_FIELDS: (keyof VendorResult)[] = [
   "company",
-  "profile",
+  "status",
   "actor",
   "year",
   "event",
@@ -78,7 +81,7 @@ describe("useCascadingFilters - Vendor Results (anyField search)", () => {
       "Acme Health",
       "Beta Medical",
     ]);
-    expect(result.current.availableOptions.profiles).toEqual(["IPS", "XDS"]);
+    expect(result.current.availableOptions.statuses).toEqual(["Development", "Production"]);
     expect(result.current.availableOptions.years).toEqual(["2023", "2024"]);
   });
 
@@ -94,8 +97,7 @@ describe("useCascadingFilters - Vendor Results (anyField search)", () => {
 
     // Only Acme rows remain.
     expect(result.current.filtered).toHaveLength(2);
-    // Profiles available given Acme is selected: IPS + XDS (no Beta-only values).
-    expect(result.current.availableOptions.profiles).toEqual(["IPS", "XDS"]);
+    expect(result.current.availableOptions.statuses).toEqual(["Development", "Production"]);
     // Years available for Acme: 2023 and 2024.
     expect(result.current.availableOptions.years).toEqual(["2023", "2024"]);
     // A selected dimension still shows ALL of its own options (not narrowed by itself).
@@ -115,10 +117,9 @@ describe("useCascadingFilters - Vendor Results (anyField search)", () => {
       }),
     );
 
-    // 2024 rows: Acme/IPS and Beta/IPS.
+    // 2024 rows: Acme and Beta.
     expect(result.current.filtered).toHaveLength(2);
-    // Profiles available in 2024: only IPS (XDS was 2023).
-    expect(result.current.availableOptions.profiles).toEqual(["IPS"]);
+    expect(result.current.availableOptions.statuses).toEqual(["Production"]);
     // Companies available in 2024: both Acme and Beta.
     expect(result.current.availableOptions.companies).toEqual([
       "Acme Health",
@@ -141,13 +142,13 @@ describe("useCascadingFilters - Vendor Results (anyField search)", () => {
   });
 
   it("anyField search does NOT match a phrase spanning two separate fields", () => {
-    // "Acme Health" (company) + "IPS" (profile) -> "acme ips" should not match
+    // A phrase spanning company and status should not match
     // in anyField mode because no single field contains that substring.
     const { result } = renderHook(() =>
       useCascadingFilters<VendorResult>({
         data: vendors,
         dimensions: vendorDimensions(),
-        searchQuery: "acme ips",
+        searchQuery: "acme production",
         searchFields: VENDOR_SEARCH_FIELDS,
       }),
     );
@@ -167,7 +168,7 @@ describe("useCascadingFilters - Vendor Results (anyField search)", () => {
 
     expect(result.current.filtered).toHaveLength(1);
     expect(result.current.availableOptions.companies).toEqual(["Beta Medical"]);
-    expect(result.current.availableOptions.profiles).toEqual(["IPS"]);
+    expect(result.current.availableOptions.statuses).toEqual(["Production"]);
   });
 });
 

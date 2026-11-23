@@ -27,10 +27,10 @@ export function ResultsSection({ results }: ResultsSectionProps) {
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between md:mb-6">
             <div>
               <h3 className="text-lg font-semibold md:text-xl">
-                Results
+                Vendors
               </h3>
               <p className="text-sm text-muted-foreground" data-testid="text-results-count">
-                Showing {results.length} {results.length === 1 ? 'result' : 'results'}
+                Showing {results.length} {results.length === 1 ? 'entry' : 'entries'}
               </p>
             </div>
             
@@ -38,12 +38,11 @@ export function ResultsSection({ results }: ResultsSectionProps) {
               <ViewModeToggle
                 viewMode={viewMode}
                 onChange={setViewMode}
-                tableLabel="Table"
-                cardsLabel="Cards"
-                labelClassName="sm:hidden"
-                activeVariant="secondary"
-                containerClassName="flex gap-1 rounded-lg border p-1"
-                buttonClassName="flex-1 gap-2 min-h-[44px] sm:flex-none sm:min-h-0"
+                tableLabel="List View"
+                cardsLabel="Item View"
+                activeVariant="default"
+                containerClassName="flex gap-1 rounded-md border p-1"
+                buttonClassName="flex-1 gap-1.5 min-h-[44px] sm:flex-none sm:min-h-0"
                 groupingControl={
                   viewMode === "cards" ? (
                     <Button

@@ -28,18 +28,20 @@ export interface VendorResult {
   product?: string;
   primaryContact?: string;
   contactInfo?: string;
+  status?: string;
 }
 
 export const vendorResultSchema = z.object({
   company: z.string().trim().min(1),
-  profile: z.string().trim().min(1),
-  actor: z.string().trim().min(1),
-  year: z.string().trim().min(1),
-  event: z.string().trim().min(1),
+  profile: z.string().trim(),
+  actor: z.string().trim(),
+  year: z.string().trim(),
+  event: z.string().trim(),
   website: z.string().optional(),
   product: z.string().optional(),
   primaryContact: z.string().optional(),
   contactInfo: z.string().optional(),
+  status: z.string().optional(),
 });
 
 export type InsertVendorResult = z.infer<typeof vendorResultSchema>;

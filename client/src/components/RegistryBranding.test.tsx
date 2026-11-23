@@ -70,4 +70,16 @@ describe("registry branding", () => {
     expect(mobile.getAttribute("href")).toBe(desktop.getAttribute("href"));
     expect(mobile.getAttribute("target")).toBeNull();
   });
+
+  it("links to the vendor registry from desktop and mobile navigation", () => {
+    render(<Header />);
+    const desktop = screen.getByTestId("link-results");
+    expect(desktop.tagName).toBe("A");
+    expect(desktop.getAttribute("href")).toBe("/results");
+
+    fireEvent.click(screen.getByTestId("button-mobile-menu"));
+    const mobile = screen.getByTestId("mobile-link-results");
+    expect(mobile.tagName).toBe("A");
+    expect(mobile.getAttribute("href")).toBe("/results");
+  });
 });
